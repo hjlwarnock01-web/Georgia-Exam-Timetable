@@ -72,7 +72,6 @@
             gap: 10px;
         }
 
-        /* Timer Section */
         .timer-display {
             text-align: center;
             margin: 30px 0;
@@ -155,7 +154,6 @@
             cursor: pointer;
         }
 
-        /* Analytics */
         .stats-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
@@ -182,7 +180,6 @@
             opacity: 0.9;
         }
 
-        /* Subject breakdown */
         .subject-breakdown {
             margin-top: 20px;
         }
@@ -208,7 +205,6 @@
             font-weight: 600;
         }
 
-        /* Daily Tip */
         .tip-content {
             background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%);
             padding: 20px;
@@ -219,7 +215,6 @@
             font-style: italic;
         }
 
-        /* Timetable */
         .week-section {
             margin-bottom: 30px;
         }
@@ -285,11 +280,32 @@
             margin-bottom: 8px;
             border-radius: 8px;
             transition: all 0.3s ease;
+            cursor: move;
         }
 
         .session-item:hover {
             transform: translateX(5px);
             box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .session-item.dragging {
+            opacity: 0.5;
+            transform: scale(0.95);
+        }
+
+        .session-item.drag-over {
+            border-top: 3px solid #667eea;
+        }
+
+        .drag-handle {
+            cursor: grab;
+            color: #a0aec0;
+            margin-right: 10px;
+            font-size: 1.2em;
+        }
+
+        .drag-handle:active {
+            cursor: grabbing;
         }
 
         .session-checkbox {
@@ -348,7 +364,6 @@
             color: #dd6b20;
         }
 
-        /* Catch-up Box */
         .catchup-item {
             background: #fff5f5;
             padding: 15px;
@@ -391,7 +406,6 @@
             font-style: italic;
         }
 
-        /* Progress bar */
         .progress-bar {
             width: 100%;
             height: 30px;
@@ -412,21 +426,6 @@
             font-weight: 600;
             font-size: 0.9em;
         }
-
-        .alert {
-            padding: 15px;
-            border-radius: 10px;
-            margin-bottom: 20px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .alert-info {
-            background: #ebf8ff;
-            color: #2c5282;
-            border-left: 4px solid #3182ce;
-        }
     </style>
 </head>
 <body>
@@ -434,13 +433,11 @@
         <header>
             <h1>📚 My Exam Study Tracker</h1>
             <p class="subtitle">Stay organized, track your progress, and ace those exams!</p>
-            <p class="subtitle">Start Date: Monday, October 13, 2025</p>
+            <p class="subtitle">Start Date: Saturday, October 25, 2025</p>
         </header>
 
         <div class="grid">
-            <!-- Left Column -->
             <div>
-                <!-- Study Timer -->
                 <div class="card">
                     <h2>⏱️ Study Timer</h2>
                     <div class="subject-selector">
@@ -472,34 +469,21 @@
                     </div>
                 </div>
 
-                <!-- Timetable -->
                 <div class="card" style="margin-top: 20px;">
                     <h2>📅 Study Timetable & Checklist</h2>
-                    
                     <div class="progress-bar">
                         <div class="progress-fill" id="overallProgress" style="width: 0%">0%</div>
                     </div>
-
                     <div id="timetableContainer"></div>
-                </div>
-
-                <!-- Catch-up Box -->
-                <div class="card" style="margin-top: 20px;">
-                    <h2>🎯 Catch-Up Box</h2>
-                    <p style="color: #718096; margin-bottom: 15px;">Tasks that missed their scheduled time are automatically added here.</p>
-                    <div id="catchupContainer"></div>
                 </div>
             </div>
 
-            <!-- Right Column -->
             <div>
-                <!-- Daily Tip -->
                 <div class="card">
                     <h2>💡 Daily Tip</h2>
                     <div class="tip-content" id="dailyTip"></div>
                 </div>
 
-                <!-- Analytics -->
                 <div class="card" style="margin-top: 20px;">
                     <h2>📊 Study Analytics</h2>
                     <div class="stats-grid">
@@ -526,19 +510,23 @@
                         <div id="subjectTimeBreakdown"></div>
                     </div>
                 </div>
+
+                <div class="card" style="margin-top: 20px;">
+                    <h2>🎯 Catch-Up Box</h2>
+                    <p style="color: #718096; margin-bottom: 15px;">Tasks that missed their scheduled time are automatically added here.</p>
+                    <div id="catchupContainer"></div>
+                </div>
             </div>
         </div>
     </div>
 
     <script>
-        // Timer variables
         let timerInterval = null;
         let elapsedSeconds = 0;
         let isRunning = false;
         let currentSession = null;
         let timerStartTime = null;
 
-        // Daily tips
         const dailyTips = [
             "🧠 Take a 5-10 minute break every hour. Your brain needs it!",
             "💧 Stay hydrated! Keep water nearby while studying.",
@@ -562,115 +550,27 @@
             "🌈 Stay positive! You've got this! One session at a time."
         ];
 
-        // Timetable data structure
         const timetableData = {
-            "Week 1: Oct 13-18": [
-                {
-                    date: "MON Oct 13",
-                    sessions: [
-                        { subject: "Life Sciences P1", topic: "Nervous System", id: "mon1" },
-                        { subject: "Life Sciences P1", topic: "Nervous System", id: "mon2" },
-                        { subject: "Life Sciences P1", topic: "Plant Response", id: "mon3" }
-                    ]
-                },
-                {
-                    date: "TUE Oct 14",
-                    note: "SCHOOL 8am-3pm",
-                    sessions: [
-                        { subject: "Mathematics P1", topic: "Calculus", id: "tue1" }
-                    ]
-                },
-                {
-                    date: "WED Oct 15",
-                    note: "SCHOOL 8am-3pm, TUTORING 4-5pm",
-                    sessions: [
-                        { subject: "Life Sciences P1", topic: "Receptors", id: "wed1" },
-                        { subject: "Life Sciences P1", topic: "Receptors", id: "wed2" }
-                    ]
-                },
-                {
-                    date: "THU Oct 16",
-                    note: "TUTORING 4-5pm",
-                    rest: true
-                },
-                {
-                    date: "FRI Oct 17",
-                    rest: true
-                },
-                {
-                    date: "SAT Oct 18",
-                    sessions: [
-                        { subject: "Mathematics P1", topic: "Calculus", id: "sat1" },
-                        { subject: "Mathematics P1", topic: "Calculus", id: "sat2" },
-                        { subject: "Mathematics P1", topic: "Algebra", id: "sat3" }
-                    ]
-                }
-            ],
-            "Week 2: Oct 19-25 ⚠️ English P3 Exam Oct 23": [
-                {
-                    date: "SUN Oct 19",
-                    sessions: [
-                        { subject: "Life Sciences P1", topic: "Human Reproduction", id: "sun19-1" },
-                        { subject: "Life Sciences P1", topic: "Human Reproduction", id: "sun19-2" },
-                        { subject: "Life Sciences P1", topic: "Homeostasis", id: "sun19-3" }
-                    ]
-                },
-                {
-                    date: "MON Oct 20",
-                    sessions: [
-                        { subject: "Mathematics P1", topic: "Algebra", id: "mon20-1" },
-                        { subject: "Mathematics P1", topic: "Functions & Graphs", id: "mon20-2" },
-                        { subject: "Mathematics P1", topic: "Functions & Graphs", id: "mon20-3" }
-                    ]
-                },
-                {
-                    date: "TUE Oct 21",
-                    note: "2 days before English P3",
-                    sessions: [
-                        { subject: "English P3", topic: "Creative Writing", id: "tue21-1" },
-                        { subject: "English P3", topic: "Creative Writing", id: "tue21-2" },
-                        { subject: "English P3", topic: "Transactional Writing", id: "tue21-3" }
-                    ]
-                },
-                {
-                    date: "WED Oct 22",
-                    note: "1 day before English P3",
-                    sessions: [
-                        { subject: "Life Sciences P1", topic: "Human Reproduction", id: "wed22-1" },
-                        { subject: "Life Sciences P1", topic: "Homeostasis", id: "wed22-2" },
-                        { subject: "Life Sciences P1", topic: "Homeostasis", id: "wed22-3" }
-                    ]
-                },
-                {
-                    date: "THU Oct 23",
-                    exam: "English P3",
-                    note: "TUTORING 4-5pm"
-                },
-                {
-                    date: "FRI Oct 24",
-                    rest: true
-                }
-            ],
-            "Week 3: Oct 25-Nov 1 ⚠️ English P1 Oct 29, Math P1 Oct 31": [
+            "Week 2: Oct 25-31 ⚠️ English P1 Oct 29, Math P1 Oct 31": [
                 {
                     date: "SAT Oct 25",
                     sessions: [
-                        { subject: "Mathematics P1", topic: "Functions & Graphs", id: "sat25-1" },
-                        { subject: "Mathematics P1", topic: "Finance & Probability", id: "sat25-2" },
-                        { subject: "Mathematics P1", topic: "Finance & Probability", id: "sat25-3" }
+                        { subject: "Life Sciences P1", topic: "Receptors", id: "sat25-1" },
+                        { subject: "Life Sciences P1", topic: "Receptors", id: "sat25-2" },
+                        { subject: "Life Sciences P1", topic: "Homeostasis", id: "sat25-3" }
                     ]
                 },
                 {
                     date: "SUN Oct 26",
                     sessions: [
-                        { subject: "Consumer Studies", topic: "Food & Nutrition", id: "sun26-1" },
-                        { subject: "Consumer Studies", topic: "Food & Nutrition", id: "sun26-2" },
-                        { subject: "Consumer Studies", topic: "Clothing", id: "sun26-3" }
+                        { subject: "Mathematics P1", topic: "Calculus", id: "sun26-1" },
+                        { subject: "Mathematics P1", topic: "Calculus", id: "sun26-2" },
+                        { subject: "Mathematics P1", topic: "Algebra", id: "sun26-3" }
                     ]
                 },
                 {
                     date: "MON Oct 27",
-                    note: "2 days before English P1",
+                    note: "2 days before English P1 - INTENSIVE",
                     sessions: [
                         { subject: "English P1", topic: "Comprehension", id: "mon27-1" },
                         { subject: "English P1", topic: "Comprehension", id: "mon27-2" },
@@ -679,11 +579,11 @@
                 },
                 {
                     date: "TUE Oct 28",
-                    note: "1 day before English P1",
+                    note: "1 day before English P1 - INTENSIVE",
                     sessions: [
-                        { subject: "Consumer Studies", topic: "Entrepreneurship", id: "tue28-1" },
-                        { subject: "Consumer Studies", topic: "Entrepreneurship", id: "tue28-2" },
-                        { subject: "Mathematics P1", topic: "Finance & Probability", id: "tue28-3" }
+                        { subject: "English P1", topic: "Language Skills Review", id: "tue28-1" },
+                        { subject: "English P1", topic: "Mock Exam Practice", id: "tue28-2" },
+                        { subject: "English P1", topic: "Final Review", id: "tue28-3" }
                     ]
                 },
                 {
@@ -692,10 +592,10 @@
                 },
                 {
                     date: "THU Oct 30",
-                    note: "1 day before Math P1, TUTORING 4-5pm",
+                    note: "1 day before Math P1 - INTENSIVE, TUTORING 4-5pm",
                     sessions: [
-                        { subject: "Mathematics P1", topic: "Finance & Probability", id: "thu30-1" },
-                        { subject: "Mathematics P1", topic: "Patterns & Sequences", id: "thu30-2" },
+                        { subject: "Mathematics P1", topic: "Functions & Graphs Review", id: "thu30-1" },
+                        { subject: "Mathematics P1", topic: "Finance & Probability", id: "thu30-2" },
                         { subject: "Mathematics P1", topic: "Mock P1 + Review", id: "thu30-3" }
                     ]
                 },
@@ -705,21 +605,22 @@
                     note: "TUTORING 4-5pm"
                 }
             ],
-            "Week 4: Nov 1-8 ⚠️ Math P2 Nov 3": [
+            "Week 3: Nov 1-7 ⚠️ Math P2 Nov 3": [
                 {
                     date: "SAT Nov 1",
+                    note: "2 days before Math P2 - INTENSIVE",
                     sessions: [
-                        { subject: "Mathematics P1", topic: "Mock P1 + Review", id: "sat1-1" },
-                        { subject: "English P1", topic: "Mock P1", id: "sat1-2" },
-                        { subject: "English P1", topic: "Mock P1", id: "sat1-3" }
+                        { subject: "Mathematics P2", topic: "Euclidean Geometry", id: "sat1-1" },
+                        { subject: "Mathematics P2", topic: "Euclidean Geometry", id: "sat1-2" },
+                        { subject: "Mathematics P2", topic: "Statistics", id: "sat1-3" }
                     ]
                 },
                 {
                     date: "SUN Nov 2",
-                    note: "1 day before Math P2",
+                    note: "1 day before Math P2 - INTENSIVE",
                     sessions: [
-                        { subject: "Mathematics P2", topic: "Euclidean Geometry", id: "sun2-1" },
-                        { subject: "Mathematics P2", topic: "Euclidean Geometry", id: "sun2-2" },
+                        { subject: "Mathematics P2", topic: "Analytical Geometry", id: "sun2-1" },
+                        { subject: "Mathematics P2", topic: "Trigonometry", id: "sun2-2" },
                         { subject: "Mathematics P2", topic: "Mock P2 + Review", id: "sun2-3" }
                     ]
                 },
@@ -730,9 +631,9 @@
                 {
                     date: "TUE Nov 4",
                     sessions: [
-                        { subject: "Mathematics P2", topic: "Euclidean Geometry", id: "tue4-1" },
-                        { subject: "Mathematics P2", topic: "Statistics", id: "tue4-2" },
-                        { subject: "Mathematics P2", topic: "Statistics", id: "tue4-3" }
+                        { subject: "Consumer Studies", topic: "Food & Nutrition", id: "tue4-1" },
+                        { subject: "Consumer Studies", topic: "Food & Nutrition", id: "tue4-2" },
+                        { subject: "Consumer Studies", topic: "Clothing", id: "tue4-3" }
                     ]
                 },
                 {
@@ -748,9 +649,9 @@
                     date: "THU Nov 6",
                     note: "FULL DAY, NO tutoring",
                     sessions: [
-                        { subject: "Mathematics P2", topic: "Analytical Geometry", id: "thu6-1" },
-                        { subject: "Mathematics P2", topic: "Analytical Geometry", id: "thu6-2" },
-                        { subject: "Mathematics P2", topic: "Trigonometry", id: "thu6-3" }
+                        { subject: "Consumer Studies", topic: "Entrepreneurship", id: "thu6-1" },
+                        { subject: "Consumer Studies", topic: "Entrepreneurship", id: "thu6-2" },
+                        { subject: "Consumer Studies", topic: "The Consumer", id: "thu6-3" }
                     ]
                 },
                 {
@@ -758,13 +659,13 @@
                     rest: true
                 }
             ],
-            "Week 5: Nov 8-15 ⚠️ Geo P1 Nov 12, Eng P2 Nov 13, Life Sci P1 Nov 14": [
+            "Week 4: Nov 8-14 ⚠️ Geo P1 Nov 12, Eng P2 Nov 13, Life Sci P1 Nov 14": [
                 {
                     date: "SAT Nov 8",
                     sessions: [
-                        { subject: "Mathematics P2", topic: "Analytical Geometry", id: "sat8-1" },
-                        { subject: "Mathematics P2", topic: "Trigonometry", id: "sat8-2" },
-                        { subject: "Mathematics P2", topic: "Trigonometry", id: "sat8-3" }
+                        { subject: "Life Sciences P1", topic: "Homeostasis", id: "sat8-1" },
+                        { subject: "Life Sciences P1", topic: "Human Reproduction", id: "sat8-2" },
+                        { subject: "Life Sciences P1", topic: "Human Reproduction", id: "sat8-3" }
                     ]
                 },
                 {
@@ -777,7 +678,7 @@
                 },
                 {
                     date: "MON Nov 10",
-                    note: "2 days before Geo P1",
+                    note: "2 days before Geo P1 - INTENSIVE",
                     sessions: [
                         { subject: "Geography P1", topic: "Climatology", id: "mon10-1" },
                         { subject: "Geography P1", topic: "Climatology", id: "mon10-2" },
@@ -786,7 +687,7 @@
                 },
                 {
                     date: "TUE Nov 11",
-                    note: "1 day before Geo P1",
+                    note: "1 day before Geo P1 - INTENSIVE",
                     sessions: [
                         { subject: "Geography P1", topic: "Geomorphology", id: "tue11-1" },
                         { subject: "Geography P1", topic: "Mapwork", id: "tue11-2" },
@@ -796,7 +697,7 @@
                 {
                     date: "WED Nov 12",
                     exam: "Geography P1",
-                    note: "Evening study",
+                    note: "Evening study - 1 day before Eng P2",
                     sessions: [
                         { subject: "English P2", topic: "Poetry + Literature", id: "wed12-1" },
                         { subject: "English P2", topic: "Poetry + Literature", id: "wed12-2" }
@@ -804,8 +705,8 @@
                 },
                 {
                     date: "THU Nov 13",
-                    exam: "English P2",
-                    note: "Afternoon study",
+                    exam: "English P2 (LAST English!)",
+                    note: "Afternoon study - 1 day before Life Sci P1",
                     sessions: [
                         { subject: "Life Sciences P1", topic: "Mock P1 + Review", id: "thu13-1" },
                         { subject: "Life Sciences P1", topic: "Mock P1 + Review", id: "thu13-2" }
@@ -816,28 +717,29 @@
                     exam: "Life Sciences P1"
                 }
             ],
-            "Week 6: Nov 15-22 ⚠️ Life Sci P2 Nov 17, Geo P2 Nov 18, Econ P1 Nov 19, Econ P2 Nov 21": [
+            "Week 5: Nov 15-21 ⚠️ Life Sci P2 Nov 17, Geo P2 Nov 18, Econ P1 Nov 19, Econ P2 Nov 21": [
                 {
                     date: "SAT Nov 15",
+                    note: "2 days before Life Sci P2 - INTENSIVE",
                     sessions: [
-                        { subject: "Life Sciences P1", topic: "Vertebrate Reproduction", id: "sat15-1" },
-                        { subject: "English P2", topic: "Poetry + Literature", id: "sat15-2" },
-                        { subject: "English P2", topic: "Poetry + Literature", id: "sat15-3" }
+                        { subject: "Life Sciences P2", topic: "Genetics", id: "sat15-1" },
+                        { subject: "Life Sciences P2", topic: "Genetics", id: "sat15-2" },
+                        { subject: "Life Sciences P2", topic: "Evolution Review", id: "sat15-3" }
                     ]
                 },
                 {
                     date: "SUN Nov 16",
-                    note: "1 day before Life Sci P2",
+                    note: "1 day before Life Sci P2 - INTENSIVE",
                     sessions: [
-                        { subject: "Life Sciences P2", topic: "Genetics", id: "sun16-1" },
-                        { subject: "Life Sciences P2", topic: "Genetics", id: "sun16-2" },
+                        { subject: "Life Sciences P2", topic: "DNA & Meiosis Review", id: "sun16-1" },
+                        { subject: "Life Sciences P2", topic: "Mock P2 Practice", id: "sun16-2" },
                         { subject: "Life Sciences P2", topic: "Mock P2 + Review", id: "sun16-3" }
                     ]
                 },
                 {
                     date: "MON Nov 17",
-                    exam: "Life Sciences P2",
-                    note: "Evening study",
+                    exam: "Life Sciences P2 (LAST Life Sci!)",
+                    note: "Evening study - 1 day before Geo P2",
                     sessions: [
                         { subject: "Geography P2", topic: "Settlement Geography", id: "mon17-1" },
                         { subject: "Geography P2", topic: "Settlement Geography", id: "mon17-2" }
@@ -845,99 +747,66 @@
                 },
                 {
                     date: "TUE Nov 18",
-                    exam: "Geography P2"
+                    exam: "Geography P2 (LAST Geography!)",
+                    note: "Evening study - 1 day before Econ P1",
+                    sessions: [
+                        { subject: "Economics P1", topic: "Macroeconomics", id: "tue18-1" },
+                        { subject: "Economics P1", topic: "Economic Pursuits", id: "tue18-2" }
+                    ]
                 },
                 {
                     date: "WED Nov 19",
-                    exam: "Economics P1"
+                    exam: "Economics P1",
+                    note: "Evening study - 2 days before Econ P2"
                 },
                 {
                     date: "THU Nov 20",
-                    note: "FULL DAY, 1 day before Econ P2, NO tutoring",
+                    note: "FULL DAY, 1 day before Econ P2 - INTENSIVE, NO tutoring",
                     sessions: [
                         { subject: "Economics P2", topic: "Microeconomics", id: "thu20-1" },
                         { subject: "Economics P2", topic: "Microeconomics", id: "thu20-2" },
-                        { subject: "Economics P2", topic: "Contemporary Issues", id: "thu20-3" }
+                        { subject: "Economics P2", topic: "Contemporary Issues + Review", id: "thu20-3" }
                     ]
                 },
                 {
                     date: "FRI Nov 21",
-                    exam: "Economics P2"
+                    exam: "Economics P2 (LAST Economics!)"
                 }
             ],
-            "Week 7: Nov 22-28 ⚠️ Consumer Studies Nov 25": [
+            "Week 6: Nov 22-25 ⚠️ Consumer Studies Nov 25 (FINAL EXAM!)": [
                 {
                     date: "SAT Nov 22",
                     sessions: [
-                        { subject: "Consumer Studies", topic: "Entrepreneurship", id: "sat22-1" },
-                        { subject: "Consumer Studies", topic: "The Consumer + Housing", id: "sat22-2" },
-                        { subject: "Consumer Studies", topic: "The Consumer + Housing", id: "sat22-3" }
+                        { subject: "Economics P1", topic: "Macroeconomics Review", id: "sat22-1" },
+                        { subject: "Economics P1", topic: "Economic Pursuits Review", id: "sat22-2" },
+                        { subject: "Economics P2", topic: "Mock P2 Review", id: "sat22-3" }
                     ]
                 },
                 {
                     date: "SUN Nov 23",
-                    note: "2 days before Consumer",
+                    note: "2 days before Consumer - INTENSIVE",
                     sessions: [
-                        { subject: "Geography P2", topic: "Settlement Geography", id: "sun23-1" },
-                        { subject: "Geography P2", topic: "Economic Geography", id: "sun23-2" },
-                        { subject: "Geography P2", topic: "Economic Geography", id: "sun23-3" }
+                        { subject: "Consumer Studies", topic: "Housing Review", id: "sun23-1" },
+                        { subject: "Consumer Studies", topic: "Entrepreneurship Review", id: "sun23-2" },
+                        { subject: "Consumer Studies", topic: "Food & Nutrition Review", id: "sun23-3" }
                     ]
                 },
                 {
                     date: "MON Nov 24",
-                    note: "1 day before Consumer",
+                    note: "1 day before Consumer - INTENSIVE",
                     sessions: [
-                        { subject: "Consumer Studies", topic: "The Consumer + Housing", id: "mon24-1" },
-                        { subject: "Consumer Studies", topic: "Mock + Final Review", id: "mon24-2" },
+                        { subject: "Consumer Studies", topic: "The Consumer + Housing Final Review", id: "mon24-1" },
+                        { subject: "Consumer Studies", topic: "Mock Exam Practice", id: "mon24-2" },
                         { subject: "Consumer Studies", topic: "Mock + Final Review", id: "mon24-3" }
                     ]
                 },
                 {
                     date: "TUE Nov 25",
-                    exam: "Consumer Studies"
-                },
-                {
-                    date: "WED Nov 26",
-                    sessions: [
-                        { subject: "Geography P2", topic: "Economic Geography", id: "wed26-1" },
-                        { subject: "Geography P2", topic: "Mapwork", id: "wed26-2" },
-                        { subject: "Geography P2", topic: "Mock P2 + Review", id: "wed26-3" }
-                    ]
-                },
-                {
-                    date: "THU Nov 27",
-                    note: "FULL DAY",
-                    sessions: [
-                        { subject: "Economics P1", topic: "Macroeconomics", id: "thu27-1" },
-                        { subject: "Economics P1", topic: "Macroeconomics", id: "thu27-2" },
-                        { subject: "Economics P1", topic: "Economic Pursuits", id: "thu27-3" }
-                    ]
-                },
-                {
-                    date: "FRI Nov 28",
-                    rest: true
-                }
-            ],
-            "Final Sessions: Nov 29-30": [
-                {
-                    date: "SAT Nov 29",
-                    sessions: [
-                        { subject: "Economics P1", topic: "Macroeconomics + Economic Pursuits", id: "sat29-1" },
-                        { subject: "Economics P1", topic: "Macroeconomics + Economic Pursuits", id: "sat29-2" },
-                        { subject: "Economics P2", topic: "Microeconomics", id: "sat29-3" }
-                    ]
-                },
-                {
-                    date: "SUN Nov 30",
-                    sessions: [
-                        { subject: "Economics P2", topic: "Mock + Review", id: "sun30-1" },
-                        { subject: "Geography P2", topic: "Mock P2 + Review", id: "sun30-2" }
-                    ]
+                    exam: "Consumer Studies (FINAL EXAM!)"
                 }
             ]
         };
 
-        // Initialize
         document.addEventListener('DOMContentLoaded', function() {
             loadDailyTip();
             loadTimetable();
@@ -947,7 +816,6 @@
             updateTimerDisplay();
         });
 
-        // Daily tip rotation
         function loadDailyTip() {
             const today = new Date();
             const dayOfYear = Math.floor((today - new Date(today.getFullYear(), 0, 0)) / 86400000);
@@ -955,23 +823,19 @@
             document.getElementById('dailyTip').textContent = dailyTips[tipIndex];
         }
 
-        // Restore timer state from localStorage
         function restoreTimerState() {
             const savedState = localStorage.getItem('timerState');
             if (savedState) {
                 const state = JSON.parse(savedState);
                 
                 if (state.isRunning) {
-                    // Calculate elapsed time since the timer started
                     const now = Date.now();
                     const timePassed = Math.floor((now - state.startTime) / 1000);
                     elapsedSeconds = state.elapsedSeconds + timePassed;
                     
-                    // Restore UI state
                     document.getElementById('currentSubject').value = state.subject;
                     document.getElementById('currentStudySubject').textContent = `Studying: ${state.subject}`;
                     
-                    // Restart the timer
                     isRunning = true;
                     timerStartTime = state.startTime;
                     currentSession = {
@@ -987,7 +851,6 @@
                         elapsedSeconds++;
                         updateTimerDisplay();
                         
-                        // Update saved state every 10 seconds
                         if (elapsedSeconds % 10 === 0) {
                             saveTimerState();
                         }
@@ -996,7 +859,6 @@
             }
         }
 
-        // Save timer state to localStorage
         function saveTimerState() {
             if (isRunning && currentSession) {
                 const state = {
@@ -1012,7 +874,6 @@
             }
         }
 
-        // Timer functions
         function startTimer() {
             const subject = document.getElementById('currentSubject').value;
             if (!subject) {
@@ -1026,21 +887,18 @@
             document.getElementById('pauseBtn').disabled = false;
             document.getElementById('currentStudySubject').textContent = `Studying: ${subject}`;
 
-            // Start new session
             currentSession = {
                 subject: subject,
                 startTime: timerStartTime,
                 elapsedSeconds: elapsedSeconds
             };
 
-            // Save initial state
             saveTimerState();
 
             timerInterval = setInterval(() => {
                 elapsedSeconds++;
                 updateTimerDisplay();
                 
-                // Update saved state every 10 seconds
                 if (elapsedSeconds % 10 === 0) {
                     saveTimerState();
                 }
@@ -1055,10 +913,8 @@
             document.getElementById('startBtn').disabled = false;
             document.getElementById('pauseBtn').disabled = true;
 
-            // Clear saved state
             localStorage.removeItem('timerState');
 
-            // Save session
             if (currentSession) {
                 saveSession();
             }
@@ -1076,7 +932,6 @@
             document.getElementById('currentSubject').value = '';
             currentSession = null;
             
-            // Clear saved state
             localStorage.removeItem('timerState');
         }
 
@@ -1102,7 +957,6 @@
             loadAnalytics();
         }
 
-        // Load timetable
         function loadTimetable() {
             const container = document.getElementById('timetableContainer');
             const completedSessions = JSON.parse(localStorage.getItem('completedSessions') || '{}');
@@ -1146,7 +1000,8 @@
                                                          session.subject.toLowerCase().includes('geography') ? 'geography' :
                                                          'economics'}`;
                             
-                            html += `<div class="session-item">
+                            html += `<div class="session-item" draggable="true" data-session-id="${session.id}" data-day="${day.date}">
+                                <span class="drag-handle">⋮⋮</span>
                                 <input type="checkbox" class="session-checkbox" 
                                        ${isCompleted ? 'checked' : ''} 
                                        onchange="toggleSession('${session.id}', '${day.date}', '${session.subject}', '${session.topic}')">
@@ -1167,10 +1022,110 @@
             
             container.innerHTML = html;
             
-            // Update progress bar
             const percentage = totalSessions > 0 ? Math.round((completedCount / totalSessions) * 100) : 0;
             document.getElementById('overallProgress').style.width = percentage + '%';
             document.getElementById('overallProgress').textContent = percentage + '%';
+            
+            // Add drag and drop functionality
+            addDragAndDrop();
+        }
+
+        function addDragAndDrop() {
+            const sessionItems = document.querySelectorAll('.session-item');
+            let draggedElement = null;
+
+            sessionItems.forEach(item => {
+                item.addEventListener('dragstart', function(e) {
+                    draggedElement = this;
+                    this.classList.add('dragging');
+                    e.dataTransfer.effectAllowed = 'move';
+                    e.dataTransfer.setData('text/html', this.innerHTML);
+                });
+
+                item.addEventListener('dragend', function(e) {
+                    this.classList.remove('dragging');
+                    // Remove all drag-over classes
+                    document.querySelectorAll('.drag-over').forEach(el => {
+                        el.classList.remove('drag-over');
+                    });
+                });
+
+                item.addEventListener('dragover', function(e) {
+                    if (e.preventDefault) {
+                        e.preventDefault();
+                    }
+                    e.dataTransfer.dropEffect = 'move';
+                    
+                    if (this !== draggedElement) {
+                        this.classList.add('drag-over');
+                    }
+                    return false;
+                });
+
+                item.addEventListener('dragleave', function(e) {
+                    this.classList.remove('drag-over');
+                });
+
+                item.addEventListener('drop', function(e) {
+                    if (e.stopPropagation) {
+                        e.stopPropagation();
+                    }
+
+                    this.classList.remove('drag-over');
+
+                    if (draggedElement !== this) {
+                        // Get parent containers
+                        const draggedParent = draggedElement.parentNode;
+                        const droppedParent = this.parentNode;
+
+                        // Swap the elements
+                        const draggedIndex = Array.from(draggedParent.children).indexOf(draggedElement);
+                        const droppedIndex = Array.from(droppedParent.children).indexOf(this);
+
+                        if (draggedParent === droppedParent) {
+                            // Same parent - reorder
+                            if (draggedIndex < droppedIndex) {
+                                droppedParent.insertBefore(draggedElement, this.nextSibling);
+                            } else {
+                                droppedParent.insertBefore(draggedElement, this);
+                            }
+                        } else {
+                            // Different parents - swap
+                            const tempDiv = document.createElement('div');
+                            draggedParent.insertBefore(tempDiv, draggedElement);
+                            droppedParent.insertBefore(draggedElement, this);
+                            draggedParent.insertBefore(this, tempDiv);
+                            draggedParent.removeChild(tempDiv);
+                        }
+
+                        // Save the new order
+                        saveSessionOrder();
+                    }
+
+                    return false;
+                });
+            });
+        }
+
+        function saveSessionOrder() {
+            // Get all session lists
+            const sessionLists = document.querySelectorAll('.session-list');
+            const orderData = {};
+
+            sessionLists.forEach(list => {
+                const dayCard = list.closest('.day-card');
+                const dayTitle = dayCard.querySelector('.day-title').textContent;
+                const sessions = Array.from(list.querySelectorAll('.session-item'));
+                
+                orderData[dayTitle] = sessions.map(item => item.dataset.sessionId);
+            });
+
+            localStorage.setItem('sessionOrder', JSON.stringify(orderData));
+        }
+
+        function loadSessionOrder() {
+            const orderData = JSON.parse(localStorage.getItem('sessionOrder') || '{}');
+            return orderData;
         }
 
         function toggleSession(sessionId, date, subject, topic) {
@@ -1180,10 +1135,8 @@
             if (completedSessions[sessionId]) {
                 delete completedSessions[sessionId];
                 
-                // Check if this session is overdue and should be added to catch-up
                 const sessionDate = parseDate(date);
                 if (sessionDate < new Date()) {
-                    // Add to catch-up if not already there
                     if (!catchupItems.find(item => item.id === sessionId)) {
                         catchupItems.push({
                             id: sessionId,
@@ -1197,7 +1150,6 @@
             } else {
                 completedSessions[sessionId] = true;
                 
-                // Remove from catch-up if it was there
                 const index = catchupItems.findIndex(item => item.id === sessionId);
                 if (index > -1) {
                     catchupItems.splice(index, 1);
@@ -1211,27 +1163,48 @@
         }
 
         function parseDate(dateString) {
-            // Parse dates like "MON Oct 13" or "TUE Oct 14"
             const parts = dateString.split(' ');
             const month = parts[1];
             const day = parseInt(parts[2]);
             
             const monthMap = {
-                'Oct': 9, // October is month 9 (0-indexed)
+                'Oct': 9,
                 'Nov': 10
             };
             
             return new Date(2025, monthMap[month], day);
         }
 
-        // Load catch-up box
         function loadCatchupBox() {
             const container = document.getElementById('catchupContainer');
             const catchupItems = JSON.parse(localStorage.getItem('catchupItems') || '[]');
             const completedSessions = JSON.parse(localStorage.getItem('completedSessions') || '{}');
             
-            // Auto-add overdue sessions to catch-up
+            // Define the start date (Oct 25, 2025)
+            const startDate = new Date(2025, 9, 25); // Month is 0-indexed
             const today = new Date();
+            
+            // Sessions before Oct 25 that should be in catch-up
+            const oldSessions = [
+                { id: "wed22-1", date: "WED Oct 22", subject: "English P3", topic: "Creative Writing" },
+                { id: "wed22-2", date: "WED Oct 22", subject: "English P3", topic: "Creative Writing" },
+                { id: "wed22-3", date: "WED Oct 22", subject: "English P3", topic: "Transactional Writing" }
+            ];
+            
+            // Add old sessions to catch-up if not completed and not already there
+            oldSessions.forEach(session => {
+                if (!completedSessions[session.id] && !catchupItems.find(item => item.id === session.id)) {
+                    catchupItems.push({
+                        id: session.id,
+                        date: session.date,
+                        subject: session.subject,
+                        topic: session.topic,
+                        addedAt: new Date().toISOString()
+                    });
+                }
+            });
+            
+            // Auto-add overdue sessions from timetable
             for (const [week, days] of Object.entries(timetableData)) {
                 days.forEach(day => {
                     if (day.sessions) {
@@ -1291,11 +1264,9 @@
             loadCatchupBox();
         }
 
-        // Load analytics
         function loadAnalytics() {
             const sessions = JSON.parse(localStorage.getItem('studySessions') || '[]');
             
-            // Calculate total time
             let totalSeconds = 0;
             let todaySeconds = 0;
             const subjectTimes = {};
@@ -1315,7 +1286,6 @@
                 subjectTimes[session.subject] += session.duration;
             });
             
-            // Update stats
             document.getElementById('totalTime').textContent = formatHours(totalSeconds);
             document.getElementById('todayTime').textContent = formatHours(todaySeconds);
             document.getElementById('sessionCount').textContent = sessions.length;
@@ -1323,7 +1293,6 @@
             const avgSeconds = sessions.length > 0 ? totalSeconds / sessions.length : 0;
             document.getElementById('averageSession').textContent = formatMinutes(avgSeconds);
             
-            // Update subject breakdown
             const breakdownHtml = Object.entries(subjectTimes)
                 .sort((a, b) => b[1] - a[1])
                 .map(([subject, seconds]) => `
