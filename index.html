@@ -426,6 +426,272 @@
             font-weight: 600;
             font-size: 0.9em;
         }
+
+        /* To Add Later Section */
+        .to-add-section {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 25px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #f0f0f0;
+        }
+
+        .section-title {
+            font-size: 1.5em;
+            color: #667eea;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .count-badge {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.9em;
+            font-weight: 600;
+        }
+
+        .pool-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-bottom: 20px;
+            max-height: 400px;
+            overflow-y: auto;
+            padding: 5px;
+        }
+
+        .pool-item {
+            background: #f8f9ff;
+            border-left: 4px solid #667eea;
+            border-radius: 8px;
+            padding: 12px 15px;
+            cursor: grab;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            transition: all 0.2s ease;
+        }
+
+        .pool-item:hover {
+            transform: translateX(5px);
+            box-shadow: 0 3px 10px rgba(102, 126, 234, 0.2);
+        }
+
+        .pool-item.dragging {
+            opacity: 0.5;
+            cursor: grabbing;
+        }
+
+        .pool-item-handle {
+            font-size: 1.3em;
+            color: #a0aec0;
+            cursor: grab;
+        }
+
+        .pool-item-content {
+            flex: 1;
+        }
+
+        .pool-item-topic {
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 3px;
+        }
+
+        .pool-item-subject {
+            font-size: 0.85em;
+            color: #667eea;
+        }
+
+        .pool-item-actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        .btn-pool {
+            padding: 6px 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 0.9em;
+            transition: all 0.2s ease;
+        }
+
+        .btn-pool-edit {
+            background: #4299e1;
+            color: white;
+        }
+
+        .btn-pool-edit:hover {
+            background: #3182ce;
+        }
+
+        .btn-pool-delete {
+            background: #fc8181;
+            color: white;
+        }
+
+        .btn-pool-delete:hover {
+            background: #f56565;
+        }
+
+        .btn-add-new {
+            width: 100%;
+            padding: 12px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .btn-add-new:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .empty-pool {
+            text-align: center;
+            padding: 40px 20px;
+            color: #a0aec0;
+            font-style: italic;
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 10000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.6);
+            animation: fadeIn 0.2s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .modal-content {
+            background: white;
+            margin: 10% auto;
+            padding: 30px;
+            border-radius: 15px;
+            width: 90%;
+            max-width: 500px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+            animation: slideIn 0.3s ease;
+        }
+
+        @keyframes slideIn {
+            from { transform: translateY(-50px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        .modal-header {
+            font-size: 1.8em;
+            color: #667eea;
+            margin-bottom: 25px;
+            font-weight: 600;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 1em;
+            transition: border-color 0.2s ease;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .modal-footer {
+            display: flex;
+            gap: 10px;
+            justify-content: flex-end;
+            margin-top: 25px;
+        }
+
+        .btn-modal {
+            padding: 10px 25px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .btn-cancel {
+            background: #e2e8f0;
+            color: #333;
+        }
+
+        .btn-cancel:hover {
+            background: #cbd5e0;
+        }
+
+        .btn-save {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .btn-save:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 3px 10px rgba(102, 126, 234, 0.4);
+        }
+
+        /* Drag feedback */
+        .drag-over {
+            background: #eff6ff !important;
+            border: 2px dashed #667eea !important;
+            box-shadow: inset 0 0 10px rgba(102, 126, 234, 0.2) !important;
+        }
+
+        .session-item {
+            cursor: grab;
+        }
+
+        .session-item:active {
+            cursor: grabbing;
+        }
+
     </style>
 </head>
 <body>
@@ -474,6 +740,19 @@
                     <div class="progress-bar">
                         <div class="progress-fill" id="overallProgress" style="width: 0%">0%</div>
                     </div>
+                    
+                    <!-- To Add Later Section -->
+                    <div class="to-add-section">
+                        <div class="section-header">
+                            <h3 class="section-title">📥 To Add Later</h3>
+                            <span class="count-badge" id="poolCount">0 sessions</span>
+                        </div>
+                        <div class="pool-list" id="poolList">
+                            <div class="empty-pool">No sessions to add yet</div>
+                        </div>
+                        <button class="btn-add-new" onclick="openAddModal()">➕ Add New Session</button>
+                    </div>
+                    
                     <div id="timetableContainer"></div>
                 </div>
             </div>
@@ -581,9 +860,9 @@
                     date: "TUE Oct 28",
                     note: "1 day before English P1 - INTENSIVE",
                     sessions: [
-                        { subject: "English P1", topic: "Language Skills Review", id: "tue28-1" },
-                        { subject: "English P1", topic: "Mock Exam Practice", id: "tue28-2" },
-                        { subject: "English P1", topic: "Final Review", id: "tue28-3" }
+                        
+                        
+                        
                     ]
                 },
                 {
@@ -594,7 +873,7 @@
                     date: "THU Oct 30",
                     note: "1 day before Math P1 - INTENSIVE, TUTORING 4-5pm",
                     sessions: [
-                        { subject: "Mathematics P1", topic: "Functions & Graphs Review", id: "thu30-1" },
+                        
                         { subject: "Mathematics P1", topic: "Finance & Probability", id: "thu30-2" },
                         { subject: "Mathematics P1", topic: "Mock P1 + Review", id: "thu30-3" }
                     ]
@@ -651,7 +930,7 @@
                     sessions: [
                         { subject: "Consumer Studies", topic: "Entrepreneurship", id: "thu6-1" },
                         { subject: "Consumer Studies", topic: "Entrepreneurship", id: "thu6-2" },
-                        { subject: "Consumer Studies", topic: "The Consumer", id: "thu6-3" }
+                        
                     ]
                 },
                 {
@@ -708,8 +987,8 @@
                     exam: "English P2 (LAST English!)",
                     note: "Afternoon study - 1 day before Life Sci P1",
                     sessions: [
-                        { subject: "Life Sciences P1", topic: "Mock P1 + Review", id: "thu13-1" },
-                        { subject: "Life Sciences P1", topic: "Mock P1 + Review", id: "thu13-2" }
+                        
+                        
                     ]
                 },
                 {
@@ -724,15 +1003,15 @@
                     sessions: [
                         { subject: "Life Sciences P2", topic: "Genetics", id: "sat15-1" },
                         { subject: "Life Sciences P2", topic: "Genetics", id: "sat15-2" },
-                        { subject: "Life Sciences P2", topic: "Evolution Review", id: "sat15-3" }
+                        
                     ]
                 },
                 {
                     date: "SUN Nov 16",
                     note: "1 day before Life Sci P2 - INTENSIVE",
                     sessions: [
-                        { subject: "Life Sciences P2", topic: "DNA & Meiosis Review", id: "sun16-1" },
-                        { subject: "Life Sciences P2", topic: "Mock P2 Practice", id: "sun16-2" },
+                        
+                        
                         { subject: "Life Sciences P2", topic: "Mock P2 + Review", id: "sun16-3" }
                     ]
                 },
@@ -765,7 +1044,7 @@
                     sessions: [
                         { subject: "Economics P2", topic: "Microeconomics", id: "thu20-1" },
                         { subject: "Economics P2", topic: "Microeconomics", id: "thu20-2" },
-                        { subject: "Economics P2", topic: "Contemporary Issues + Review", id: "thu20-3" }
+                        
                     ]
                 },
                 {
@@ -777,26 +1056,26 @@
                 {
                     date: "SAT Nov 22",
                     sessions: [
-                        { subject: "Economics P1", topic: "Macroeconomics Review", id: "sat22-1" },
-                        { subject: "Economics P1", topic: "Economic Pursuits Review", id: "sat22-2" },
-                        { subject: "Economics P2", topic: "Mock P2 Review", id: "sat22-3" }
+                        
+                        
+                        
                     ]
                 },
                 {
                     date: "SUN Nov 23",
                     note: "2 days before Consumer - INTENSIVE",
                     sessions: [
-                        { subject: "Consumer Studies", topic: "Housing Review", id: "sun23-1" },
-                        { subject: "Consumer Studies", topic: "Entrepreneurship Review", id: "sun23-2" },
-                        { subject: "Consumer Studies", topic: "Food & Nutrition Review", id: "sun23-3" }
+                        
+                        
+                        
                     ]
                 },
                 {
                     date: "MON Nov 24",
                     note: "1 day before Consumer - INTENSIVE",
                     sessions: [
-                        { subject: "Consumer Studies", topic: "The Consumer + Housing Final Review", id: "mon24-1" },
-                        { subject: "Consumer Studies", topic: "Mock Exam Practice", id: "mon24-2" },
+                        
+                        
                         { subject: "Consumer Studies", topic: "Mock + Final Review", id: "mon24-3" }
                     ]
                 },
@@ -1031,79 +1310,21 @@
         }
 
         function addDragAndDrop() {
-            const sessionItems = document.querySelectorAll('.session-item');
-            let draggedElement = null;
+            const items = document.querySelectorAll('.session-item');
+            const lists = document.querySelectorAll('.session-list');
 
-            sessionItems.forEach(item => {
-                item.addEventListener('dragstart', function(e) {
-                    draggedElement = this;
-                    this.classList.add('dragging');
-                    e.dataTransfer.effectAllowed = 'move';
-                    e.dataTransfer.setData('text/html', this.innerHTML);
-                });
+            items.forEach(item => {
+                item.setAttribute('draggable', 'true');
+                
+                item.addEventListener('dragstart', handleSessionDragStart);
+                item.addEventListener('dragend', handleDragEnd);
+            });
 
-                item.addEventListener('dragend', function(e) {
-                    this.classList.remove('dragging');
-                    // Remove all drag-over classes
-                    document.querySelectorAll('.drag-over').forEach(el => {
-                        el.classList.remove('drag-over');
-                    });
-                });
-
-                item.addEventListener('dragover', function(e) {
-                    if (e.preventDefault) {
-                        e.preventDefault();
-                    }
-                    e.dataTransfer.dropEffect = 'move';
-                    
-                    if (this !== draggedElement) {
-                        this.classList.add('drag-over');
-                    }
-                    return false;
-                });
-
-                item.addEventListener('dragleave', function(e) {
-                    this.classList.remove('drag-over');
-                });
-
-                item.addEventListener('drop', function(e) {
-                    if (e.stopPropagation) {
-                        e.stopPropagation();
-                    }
-
-                    this.classList.remove('drag-over');
-
-                    if (draggedElement !== this) {
-                        // Get parent containers
-                        const draggedParent = draggedElement.parentNode;
-                        const droppedParent = this.parentNode;
-
-                        // Swap the elements
-                        const draggedIndex = Array.from(draggedParent.children).indexOf(draggedElement);
-                        const droppedIndex = Array.from(droppedParent.children).indexOf(this);
-
-                        if (draggedParent === droppedParent) {
-                            // Same parent - reorder
-                            if (draggedIndex < droppedIndex) {
-                                droppedParent.insertBefore(draggedElement, this.nextSibling);
-                            } else {
-                                droppedParent.insertBefore(draggedElement, this);
-                            }
-                        } else {
-                            // Different parents - swap
-                            const tempDiv = document.createElement('div');
-                            draggedParent.insertBefore(tempDiv, draggedElement);
-                            droppedParent.insertBefore(draggedElement, this);
-                            draggedParent.insertBefore(this, tempDiv);
-                            draggedParent.removeChild(tempDiv);
-                        }
-
-                        // Save the new order
-                        saveSessionOrder();
-                    }
-
-                    return false;
-                });
+            lists.forEach(list => {
+                list.addEventListener('dragover', handleDragOver);
+                list.addEventListener('dragenter', handleDragEnter);
+                list.addEventListener('dragleave', handleDragLeave);
+                list.addEventListener('drop', handleDrop);
             });
         }
 
@@ -1318,6 +1539,337 @@
         function formatMinutes(seconds) {
             return Math.round(seconds / 60) + 'm';
         }
+
+        // ===== TO ADD POOL MANAGEMENT =====
+        
+        let poolData = [];
+        let draggedElement = null;
+        let dragSource = null;
+
+        // Initialize pool with 23 missing sessions
+        function initializePool() {
+            const defaultSessions = [
+                { subject: "Life Sciences P1", topic: "Nervous System" },
+                { subject: "Life Sciences P1", topic: "Nervous System" },
+                { subject: "Life Sciences P1", topic: "Nervous System" },
+                { subject: "Life Sciences P1", topic: "Plant Response" },
+                { subject: "Life Sciences P1", topic: "Homeostasis" },
+                { subject: "Life Sciences P1", topic: "Human Reproduction" },
+                { subject: "Life Sciences P1", topic: "Vertebrate Reproduction" },
+                { subject: "Life Sciences P1", topic: "Mock P1 Review" },
+                { subject: "Life Sciences P1", topic: "Mock P1 Review" },
+                { subject: "Life Sciences P1", topic: "Mock P1 Review" },
+                { subject: "Life Sciences P2", topic: "Mock P2 + Review" },
+                { subject: "Life Sciences P2", topic: "Mock P2 + Review" },
+                { subject: "Mathematics P1", topic: "Calculus" },
+                { subject: "Mathematics P1", topic: "Algebra" },
+                { subject: "Mathematics P1", topic: "Functions & Graphs" },
+                { subject: "Mathematics P1", topic: "Functions & Graphs" },
+                { subject: "Mathematics P1", topic: "Functions & Graphs" },
+                { subject: "Mathematics P1", topic: "Finance & Probability" },
+                { subject: "Mathematics P1", topic: "Finance & Probability" },
+                { subject: "Mathematics P1", topic: "Finance & Probability" },
+                { subject: "Mathematics P1", topic: "Patterns & Sequences" },
+                { subject: "Mathematics P1", topic: "Mock P1 + Review" },
+                { subject: "Mathematics P2", topic: "Euclidean Geometry" },
+                { subject: "Mathematics P2", topic: "Euclidean Geometry" },
+                { subject: "Mathematics P2", topic: "Statistics" },
+                { subject: "Mathematics P2", topic: "Statistics" },
+                { subject: "Mathematics P2", topic: "Analytical Geometry" },
+                { subject: "Mathematics P2", topic: "Analytical Geometry" },
+                { subject: "Mathematics P2", topic: "Analytical Geometry" },
+                { subject: "Mathematics P2", topic: "Trigonometry" },
+                { subject: "Mathematics P2", topic: "Trigonometry" },
+                { subject: "English P1", topic: "Mock P1" },
+                { subject: "English P1", topic: "Mock P1" },
+                { subject: "English P2", topic: "Poetry + Literature" },
+                { subject: "English P2", topic: "Poetry + Literature" },
+                { subject: "Geography P2", topic: "Settlement Geography" },
+                { subject: "Geography P2", topic: "Economic Geography" },
+                { subject: "Geography P2", topic: "Economic Geography" },
+                { subject: "Geography P2", topic: "Economic Geography" },
+                { subject: "Geography P2", topic: "Mapwork" },
+                { subject: "Geography P2", topic: "Mock P2 + Review" },
+                { subject: "Economics P1", topic: "Macroeconomics" },
+                { subject: "Economics P1", topic: "Macroeconomics" },
+                { subject: "Economics P1", topic: "Macroeconomics" },
+                { subject: "Economics P1", topic: "Macroeconomics" },
+                { subject: "Economics P1", topic: "Economic Pursuits" },
+                { subject: "Economics P1", topic: "Economic Pursuits" },
+                { subject: "Economics P2", topic: "Contemporary Issues" },
+                { subject: "Economics P2", topic: "Mock + Review" },
+                { subject: "Consumer Studies", topic: "Entrepreneurship" },
+                { subject: "Consumer Studies", topic: "The Consumer + Housing" },
+                { subject: "Consumer Studies", topic: "The Consumer + Housing" },
+                { subject: "Consumer Studies", topic: "The Consumer + Housing" },
+                { subject: "Consumer Studies", topic: "The Consumer + Housing" },
+                { subject: "Consumer Studies", topic: "The Consumer + Housing" },
+                { subject: "Consumer Studies", topic: "Mock + Final Review" },
+            ];;
+            
+            if (!localStorage.getItem('poolInitialized')) {
+                poolData = defaultSessions;
+                localStorage.setItem('poolData', JSON.stringify(poolData));
+                localStorage.setItem('poolInitialized', 'true');
+            } else {
+                const saved = localStorage.getItem('poolData');
+                poolData = saved ? JSON.parse(saved) : [];
+            }
+            
+            renderPool();
+        }
+
+        function renderPool() {
+            const container = document.getElementById('poolList');
+            const countEl = document.getElementById('poolCount');
+            
+            if (!container || !countEl) return;
+            
+            countEl.textContent = poolData.length + ' session' + (poolData.length !== 1 ? 's' : '');
+            
+            if (poolData.length === 0) {
+                container.innerHTML = '<div class="empty-pool">No sessions to add yet</div>';
+                return;
+            }
+            
+            let html = '';
+            poolData.forEach((item, index) => {
+                html += '<div class="pool-item" draggable="true" data-index="' + index + '" data-subject="' + item.subject + '" data-topic="' + item.topic + '">';
+                html += '<span class="pool-item-handle">⋮⋮</span>';
+                html += '<div class="pool-item-content">';
+                html += '<div class="pool-item-topic">' + item.topic + '</div>';
+                html += '<div class="pool-item-subject">' + item.subject + '</div>';
+                html += '</div>';
+                html += '<div class="pool-item-actions">';
+                html += '<button class="btn-pool btn-pool-edit" onclick="editPoolItem(' + index + ')">✏️</button>';
+                html += '<button class="btn-pool btn-pool-delete" onclick="deletePoolItem(' + index + ')">🗑️</button>';
+                html += '</div></div>';
+            });
+            
+            container.innerHTML = html;
+            
+            // Attach drag listeners
+            document.querySelectorAll('.pool-item').forEach(item => {
+                item.addEventListener('dragstart', handlePoolDragStart);
+                item.addEventListener('dragend', handleDragEnd);
+            });
+        }
+
+        function openAddModal() {
+            document.getElementById('newSubject').value = '';
+            document.getElementById('newTopic').value = '';
+            document.getElementById('addSessionModal').style.display = 'block';
+        }
+
+        function closeAddModal() {
+            document.getElementById('addSessionModal').style.display = 'none';
+        }
+
+        function saveNewSession() {
+            const subject = document.getElementById('newSubject').value.trim();
+            const topic = document.getElementById('newTopic').value.trim();
+            
+            if (!subject || !topic) {
+                alert('Please fill in both subject and topic');
+                return;
+            }
+            
+            poolData.push({ subject, topic });
+            localStorage.setItem('poolData', JSON.stringify(poolData));
+            renderPool();
+            closeAddModal();
+        }
+
+        function editPoolItem(index) {
+            const item = poolData[index];
+            if (!item) return;
+            
+            const newSubject = prompt('Edit Subject:', item.subject);
+            if (newSubject === null) return;
+            
+            const newTopic = prompt('Edit Topic:', item.topic);
+            if (newTopic === null) return;
+            
+            if (newSubject.trim() && newTopic.trim()) {
+                poolData[index] = { subject: newSubject.trim(), topic: newTopic.trim() };
+                localStorage.setItem('poolData', JSON.stringify(poolData));
+                renderPool();
+            }
+        }
+
+        function deletePoolItem(index) {
+            if (confirm('Delete this session from the pool?')) {
+                poolData.splice(index, 1);
+                localStorage.setItem('poolData', JSON.stringify(poolData));
+                renderPool();
+            }
+        }
+
+        // ===== DRAG AND DROP =====
+        
+        function handlePoolDragStart(e) {
+            draggedElement = this;
+            dragSource = 'pool';
+            this.classList.add('dragging');
+            e.dataTransfer.effectAllowed = 'move';
+            e.dataTransfer.setData('text/plain', '');
+        }
+
+        function handleDragEnd(e) {
+            if (draggedElement) {
+                draggedElement.classList.remove('dragging');
+            }
+            document.querySelectorAll('.drag-over').forEach(el => {
+                el.classList.remove('drag-over');
+            });
+            draggedElement = null;
+            dragSource = null;
+        }
+
+        function handleSessionDragStart(e) {
+            draggedElement = this;
+            dragSource = 'timetable';
+            this.classList.add('dragging');
+            e.dataTransfer.effectAllowed = 'move';
+            e.dataTransfer.setData('text/plain', '');
+        }
+
+        function handleDragOver(e) {
+            if (e.preventDefault) {
+                e.preventDefault();
+            }
+            e.dataTransfer.dropEffect = 'move';
+            
+            const dropTarget = e.target.closest('.session-list');
+            if (dropTarget) {
+                dropTarget.classList.add('drag-over');
+            }
+            
+            return false;
+        }
+
+        function handleDragEnter(e) {
+            const dropTarget = e.target.closest('.session-list');
+            if (dropTarget) {
+                dropTarget.classList.add('drag-over');
+            }
+        }
+
+        function handleDragLeave(e) {
+            const dropTarget = e.target.closest('.session-list');
+            if (dropTarget && !dropTarget.contains(e.relatedTarget)) {
+                dropTarget.classList.remove('drag-over');
+            }
+        }
+
+        function handleDrop(e) {
+            if (e.stopPropagation) {
+                e.stopPropagation();
+            }
+            e.preventDefault();
+            
+            const dropTarget = e.target.closest('.session-list');
+            if (!dropTarget) return false;
+            
+            dropTarget.classList.remove('drag-over');
+            
+            if (!draggedElement) return false;
+            
+            if (dragSource === 'pool') {
+                // Adding from pool to timetable
+                const index = parseInt(draggedElement.dataset.index);
+                const subject = draggedElement.dataset.subject;
+                const topic = draggedElement.dataset.topic;
+                
+                // Get the day date from the parent day card
+                const dayCard = dropTarget.closest('.day-card');
+                if (!dayCard) return false;
+                
+                const dayTitle = dayCard.querySelector('.day-title');
+                if (!dayTitle) return false;
+                
+                const dayDate = dayTitle.textContent.trim();
+                
+                // Add to timetable
+                addSessionToDay(dayDate, subject, topic);
+                
+                // Remove from pool
+                poolData.splice(index, 1);
+                localStorage.setItem('poolData', JSON.stringify(poolData));
+                renderPool();
+                
+            } else if (dragSource === 'timetable') {
+                // Moving within timetable (original behavior)
+                if (draggedElement.parentNode !== dropTarget) {
+                    dropTarget.appendChild(draggedElement);
+                    updateTimetableData();
+                }
+            }
+            
+            return false;
+        }
+
+        function addSessionToDay(dayDate, subject, topic) {
+            // Find the day in timetableData
+            for (const week in timetableData) {
+                for (const day of timetableData[week]) {
+                    if (day.date === dayDate) {
+                        if (!day.sessions) {
+                            day.sessions = [];
+                        }
+                        
+                        // Generate unique ID
+                        const timestamp = Date.now();
+                        const sessionId = dayDate.toLowerCase().replace(/\s/g, '') + '-' + timestamp;
+                        
+                        day.sessions.push({
+                            id: sessionId,
+                            subject: subject,
+                            topic: topic
+                        });
+                        
+                        // Save and reload
+                        localStorage.setItem('timetableData', JSON.stringify(timetableData));
+                        loadTimetable();
+                        return;
+                    }
+                }
+            }
+        }
+
+        // Initialize on load
+        window.addEventListener('DOMContentLoaded', function() {
+            initializePool();
+        });
+
+        // Close modal on outside click
+        window.addEventListener('click', function(event) {
+            const modal = document.getElementById('addSessionModal');
+            if (event.target === modal) {
+                closeAddModal();
+            }
+        });
+
     </script>
+
+    <!-- Add Session Modal -->
+    <div id="addSessionModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">➕ Add New Session</div>
+            <div class="form-group">
+                <label for="newSubject">Subject:</label>
+                <input type="text" id="newSubject" placeholder="e.g., Mathematics P2">
+            </div>
+            <div class="form-group">
+                <label for="newTopic">Topic:</label>
+                <input type="text" id="newTopic" placeholder="e.g., Trigonometry">
+            </div>
+            <div class="modal-footer">
+                <button class="btn-modal btn-cancel" onclick="closeAddModal()">Cancel</button>
+                <button class="btn-modal btn-save" onclick="saveNewSession()">Add to Pool</button>
+            </div>
+        </div>
+    </div>
+
 </body>
 </html>
