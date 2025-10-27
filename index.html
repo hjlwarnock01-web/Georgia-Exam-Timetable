@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>📚 My Exam Study Tracker</title>
+    <title>📚 My Exam Study Tracker - FIXED</title>
     <style>
         * {
             margin: 0;
@@ -269,193 +269,145 @@
         }
 
         .session-list {
-            margin-top: 10px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            min-height: 50px;
+            padding: 10px 5px;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            border: 2px dashed transparent;
+        }
+
+        .session-list.drag-over {
+            background: #e6f2ff !important;
+            border: 2px dashed #667eea !important;
+            transform: scale(1.02);
+        }
+
+        .session-list:empty::before {
+            content: 'Drop sessions here';
+            color: #cbd5e0;
+            font-style: italic;
+            text-align: center;
+            display: block;
+            padding: 10px;
         }
 
         .session-item {
+            background: white;
+            padding: 12px;
+            border-radius: 8px;
+            border-left: 3px solid #667eea;
             display: flex;
             align-items: center;
-            padding: 10px;
-            background: white;
-            margin-bottom: 8px;
-            border-radius: 8px;
-            transition: all 0.3s ease;
-            cursor: move;
+            gap: 10px;
+            cursor: grab;
+            transition: all 0.2s ease;
+            position: relative;
         }
 
         .session-item:hover {
             transform: translateX(5px);
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
         }
 
         .session-item.dragging {
             opacity: 0.5;
-            transform: scale(0.95);
-        }
-
-        .session-item.drag-over {
-            border-top: 3px solid #667eea;
+            cursor: grabbing;
         }
 
         .drag-handle {
             cursor: grab;
-            color: #a0aec0;
-            margin-right: 10px;
+            color: #999;
             font-size: 1.2em;
+            user-select: none;
         }
 
-        .drag-handle:active {
+        .session-item.dragging .drag-handle {
             cursor: grabbing;
         }
 
-        .session-checkbox {
-            width: 24px;
-            height: 24px;
-            margin-right: 15px;
+        .session-item input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
             cursor: pointer;
-            accent-color: #667eea;
         }
 
-        .session-text {
+        .session-content {
             flex: 1;
+        }
+
+        .session-subject {
+            font-weight: 600;
             color: #2d3748;
+            margin-bottom: 3px;
         }
 
-        .session-text.completed {
-            text-decoration: line-through;
-            color: #a0aec0;
-        }
-
-        .subject-badge {
-            padding: 5px 12px;
-            border-radius: 20px;
-            font-size: 0.85em;
-            font-weight: 600;
-            margin-left: 10px;
-        }
-
-        .badge-life {
-            background: #fef5e7;
-            color: #f39c12;
-        }
-
-        .badge-math {
-            background: #ebf8ff;
-            color: #3182ce;
-        }
-
-        .badge-english {
-            background: #f0fff4;
-            color: #38a169;
-        }
-
-        .badge-consumer {
-            background: #fef5f5;
-            color: #e53e3e;
-        }
-
-        .badge-geography {
-            background: #f7fafc;
-            color: #805ad5;
-        }
-
-        .badge-economics {
-            background: #fffaf0;
-            color: #dd6b20;
-        }
-
-        .catchup-item {
-            background: #fff5f5;
-            padding: 15px;
-            border-radius: 8px;
-            margin-bottom: 10px;
-            border-left: 4px solid #f56565;
-        }
-
-        .catchup-item .item-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 8px;
-        }
-
-        .catchup-title {
-            font-weight: 600;
-            color: #c53030;
-        }
-
-        .catchup-date {
-            font-size: 0.85em;
+        .session-topic {
+            font-size: 0.9em;
             color: #718096;
         }
 
-        .catchup-text {
-            color: #2d3748;
-            margin-bottom: 10px;
+        .subject-badge {
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 0.75em;
+            font-weight: 600;
+            white-space: nowrap;
         }
 
-        .btn-small {
-            padding: 6px 15px;
-            font-size: 0.85em;
-        }
-
-        .empty-state {
-            text-align: center;
-            padding: 40px;
-            color: #a0aec0;
-            font-style: italic;
-        }
+        .subject-Math { background: #fef5e7; color: #dc7633; }
+        .subject-Physics { background: #ebf5fb; color: #2980b9; }
+        .subject-Chemistry { background: #e8f8f5; color: #16a085; }
+        .subject-Biology { background: #fdf2e9; color: #d68910; }
+        .subject-History { background: #f4ecf7; color: #884ea0; }
+        .subject-Geography { background: #f9ebea; color: #cb4335; }
+        .subject-English { background: #eafaf1; color: #1e8449; }
+        .subject-IT { background: #f0f3f4; color: #5d6d7e; }
+        .subject-Mock { background: #ffebee; color: #c62828; }
 
         .progress-bar {
-            width: 100%;
-            height: 30px;
             background: #e2e8f0;
+            height: 30px;
             border-radius: 15px;
             overflow: hidden;
             margin: 20px 0;
         }
 
         .progress-fill {
+            background: linear-gradient(90deg, #48bb78, #38a169);
             height: 100%;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             transition: width 0.5s ease;
             display: flex;
             align-items: center;
             justify-content: center;
             color: white;
-            font-weight: 600;
-            font-size: 0.9em;
+            font-weight: bold;
         }
 
-        /* To Add Later Section */
-        .to-add-section {
+        .pool-section {
             background: white;
             border-radius: 15px;
             padding: 25px;
-            margin-bottom: 25px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            margin-bottom: 20px;
         }
 
-        .section-header {
+        .pool-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
             margin-bottom: 20px;
-            padding-bottom: 15px;
-            border-bottom: 2px solid #f0f0f0;
         }
 
-        .section-title {
-            font-size: 1.5em;
+        .pool-header h2 {
             color: #667eea;
-            font-weight: 600;
-            display: flex;
-            align-items: center;
-            gap: 10px;
+            margin: 0;
         }
 
-        .count-badge {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        .pool-count {
+            background: #667eea;
             color: white;
             padding: 5px 15px;
             border-radius: 20px;
@@ -463,31 +415,29 @@
             font-weight: 600;
         }
 
-        .pool-list {
+        .pool-items {
             display: flex;
             flex-direction: column;
             gap: 10px;
-            margin-bottom: 20px;
             max-height: 400px;
             overflow-y: auto;
-            padding: 5px;
         }
 
         .pool-item {
-            background: #f8f9ff;
-            border-left: 4px solid #667eea;
+            background: #f7fafc;
+            padding: 12px;
             border-radius: 8px;
-            padding: 12px 15px;
-            cursor: grab;
+            border-left: 3px solid #667eea;
             display: flex;
             align-items: center;
-            gap: 12px;
+            gap: 10px;
+            cursor: grab;
             transition: all 0.2s ease;
         }
 
         .pool-item:hover {
+            background: #edf2f7;
             transform: translateX(5px);
-            box-shadow: 0 3px 10px rgba(102, 126, 234, 0.2);
         }
 
         .pool-item.dragging {
@@ -495,100 +445,70 @@
             cursor: grabbing;
         }
 
-        .pool-item-handle {
-            font-size: 1.3em;
-            color: #a0aec0;
-            cursor: grab;
-        }
-
         .pool-item-content {
             flex: 1;
         }
 
-        .pool-item-topic {
-            font-weight: 600;
-            color: #333;
-            margin-bottom: 3px;
-        }
-
-        .pool-item-subject {
-            font-size: 0.85em;
-            color: #667eea;
-        }
-
-        .pool-item-actions {
+        .pool-actions {
             display: flex;
-            gap: 8px;
+            gap: 5px;
         }
 
-        .btn-pool {
-            padding: 6px 10px;
+        .action-btn {
+            padding: 5px 10px;
             border: none;
             border-radius: 5px;
             cursor: pointer;
-            font-size: 0.9em;
+            font-size: 0.85em;
             transition: all 0.2s ease;
         }
 
-        .btn-pool-edit {
+        .action-btn-edit {
             background: #4299e1;
             color: white;
         }
 
-        .btn-pool-edit:hover {
+        .action-btn-edit:hover {
             background: #3182ce;
         }
 
-        .btn-pool-delete {
+        .action-btn-delete {
             background: #fc8181;
             color: white;
         }
 
-        .btn-pool-delete:hover {
+        .action-btn-delete:hover {
             background: #f56565;
         }
 
-        .btn-add-new {
+        .add-pool-btn {
             width: 100%;
             padding: 12px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: #48bb78;
             color: white;
             border: none;
-            border-radius: 10px;
-            font-size: 1.1em;
+            border-radius: 8px;
+            font-size: 1em;
             font-weight: 600;
             cursor: pointer;
+            margin-top: 15px;
             transition: all 0.2s ease;
         }
 
-        .btn-add-new:hover {
+        .add-pool-btn:hover {
+            background: #38a169;
             transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
         }
 
-        .empty-pool {
-            text-align: center;
-            padding: 40px 20px;
-            color: #a0aec0;
-            font-style: italic;
-        }
-
-        /* Modal */
         .modal {
             display: none;
             position: fixed;
-            z-index: 10000;
+            z-index: 1000;
             left: 0;
             top: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0,0,0,0.6);
-            animation: fadeIn 0.2s ease;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
+            background: rgba(0,0,0,0.5);
         }
 
         .modal-content {
@@ -596,22 +516,15 @@
             margin: 10% auto;
             padding: 30px;
             border-radius: 15px;
-            width: 90%;
             max-width: 500px;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
-            animation: slideIn 0.3s ease;
-        }
-
-        @keyframes slideIn {
-            from { transform: translateY(-50px); opacity: 0; }
-            to { transform: translateY(0); opacity: 1; }
+            box-shadow: 0 10px 50px rgba(0,0,0,0.3);
         }
 
         .modal-header {
-            font-size: 1.8em;
-            color: #667eea;
-            margin-bottom: 25px;
+            font-size: 1.5em;
             font-weight: 600;
+            color: #667eea;
+            margin-bottom: 20px;
         }
 
         .form-group {
@@ -622,23 +535,15 @@
             display: block;
             margin-bottom: 8px;
             font-weight: 600;
-            color: #333;
+            color: #2d3748;
         }
 
-        .form-group input,
-        .form-group select {
+        .form-group input {
             width: 100%;
-            padding: 12px 15px;
+            padding: 12px;
             border: 2px solid #e2e8f0;
             border-radius: 8px;
             font-size: 1em;
-            transition: border-color 0.2s ease;
-        }
-
-        .form-group input:focus,
-        .form-group select:focus {
-            outline: none;
-            border-color: #667eea;
         }
 
         .modal-footer {
@@ -660,7 +565,7 @@
 
         .btn-cancel {
             background: #e2e8f0;
-            color: #333;
+            color: #2d3748;
         }
 
         .btn-cancel:hover {
@@ -668,997 +573,781 @@
         }
 
         .btn-save {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: #48bb78;
             color: white;
         }
 
         .btn-save:hover {
-            transform: translateY(-1px);
-            box-shadow: 0 3px 10px rgba(102, 126, 234, 0.4);
+            background: #38a169;
         }
 
-        /* Drag feedback */
-        .drag-over {
-            background: #eff6ff !important;
-            border: 2px dashed #667eea !important;
-            box-shadow: inset 0 0 10px rgba(102, 126, 234, 0.2) !important;
+        .session-menu {
+            position: absolute;
+            right: 45px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: white;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            padding: 5px;
+            display: none;
+            z-index: 100;
+            min-width: 120px;
         }
 
-        .session-item {
-            cursor: grab;
+        .session-menu.show {
+            display: block;
         }
 
-        .session-item:active {
-            cursor: grabbing;
+        .session-menu-item {
+            padding: 10px 15px;
+            cursor: pointer;
+            border-radius: 5px;
+            transition: background 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.9em;
         }
 
+        .session-menu-item:hover {
+            background: #f7fafc;
+        }
+
+        .session-menu-item.edit {
+            color: #4299e1;
+        }
+
+        .session-menu-item.delete {
+            color: #f56565;
+        }
+
+        .menu-trigger {
+            cursor: pointer;
+            padding: 5px 10px;
+            color: #999;
+            font-size: 1.2em;
+            user-select: none;
+            position: relative;
+        }
+
+        .menu-trigger:hover {
+            color: #667eea;
+        }
+
+        .debug-badge {
+            background: #fbbf24;
+            color: #78350f;
+            padding: 3px 8px;
+            border-radius: 5px;
+            font-size: 0.75em;
+            margin-left: 10px;
+        }
     </style>
 </head>
 <body>
     <div class="container">
         <header>
             <h1>📚 My Exam Study Tracker</h1>
-            <p class="subtitle">Stay organized, track your progress, and ace those exams!</p>
-            <p class="subtitle">Start Date: Saturday, October 25, 2025</p>
+            <p class="subtitle">Track your study progress for upcoming exams <span class="debug-badge">DRAG FIX v2</span></p>
         </header>
 
+        <!-- Pool Section - To Add Later -->
+        <div class="pool-section">
+            <div class="pool-header">
+                <h2>📥 To Add Later</h2>
+                <span class="pool-count" id="poolCount">0 sessions</span>
+            </div>
+            <div class="pool-items" id="poolItems">
+                <!-- Pool items will be dynamically added here -->
+            </div>
+            <button class="add-pool-btn" onclick="openAddModal()">➕ Add New Session to Pool</button>
+        </div>
+
         <div class="grid">
+            <!-- Left Column - Timetable -->
+            <div class="card">
+                <h2>📅 Weekly Study Timetable</h2>
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progressBar">0%</div>
+                </div>
+                <div id="timetableContent">
+                    <!-- Timetable will be loaded here -->
+                </div>
+            </div>
+
+            <!-- Right Column - Timer & Stats -->
             <div>
+                <!-- Study Timer -->
                 <div class="card">
                     <h2>⏱️ Study Timer</h2>
                     <div class="subject-selector">
-                        <label for="currentSubject"><strong>What are you studying?</strong></label>
-                        <select id="currentSubject">
-                            <option value="">Select a subject...</option>
-                            <option value="Life Sciences P1">🔴 Life Sciences P1</option>
-                            <option value="Life Sciences P2">🔴 Life Sciences P2</option>
-                            <option value="Mathematics P1">🔴 Mathematics P1</option>
-                            <option value="Mathematics P2">🔴 Mathematics P2</option>
-                            <option value="English P1">🟢 English P1</option>
-                            <option value="English P2">🟢 English P2</option>
-                            <option value="English P3">🟢 English P3</option>
-                            <option value="Geography P1">🟡 Geography P1</option>
-                            <option value="Geography P2">🟡 Geography P2</option>
-                            <option value="Economics P1">🔴 Economics P1</option>
-                            <option value="Economics P2">🔴 Economics P2</option>
-                            <option value="Consumer Studies">🔴 Consumer Studies</option>
+                        <select id="timerSubject">
+                            <option value="">Select Subject</option>
+                            <option value="Mathematics P1">Mathematics P1</option>
+                            <option value="Mathematics P2">Mathematics P2</option>
+                            <option value="Physics">Physics</option>
+                            <option value="Chemistry">Chemistry</option>
+                            <option value="Biology">Biology</option>
+                            <option value="History">History</option>
+                            <option value="Geography">Geography</option>
+                            <option value="English">English</option>
+                            <option value="IT">IT</option>
                         </select>
                     </div>
                     <div class="timer-display">
                         <div class="time" id="timerDisplay">00:00:00</div>
-                        <div id="currentStudySubject" style="color: #718096; margin-top: 10px;"></div>
                     </div>
                     <div class="timer-controls">
-                        <button class="btn btn-success" id="startBtn" onclick="startTimer()">▶️ Start</button>
-                        <button class="btn btn-danger" id="pauseBtn" onclick="pauseTimer()" disabled>⏸️ Pause</button>
-                        <button class="btn btn-primary" id="resetBtn" onclick="resetTimer()">🔄 Reset</button>
+                        <button class="btn btn-success" id="startBtn" onclick="startTimer()">Start</button>
+                        <button class="btn btn-danger" id="pauseBtn" onclick="pauseTimer()" disabled>Pause</button>
+                        <button class="btn btn-primary" id="resetBtn" onclick="resetTimer()">Reset</button>
                     </div>
                 </div>
 
-                <div class="card" style="margin-top: 20px;">
-                    <h2>📅 Study Timetable & Checklist</h2>
-                    <div class="progress-bar">
-                        <div class="progress-fill" id="overallProgress" style="width: 0%">0%</div>
-                    </div>
-                    
-                    <!-- To Add Later Section -->
-                    <div class="to-add-section">
-                        <div class="section-header">
-                            <h3 class="section-title">📥 To Add Later</h3>
-                            <span class="count-badge" id="poolCount">0 sessions</span>
-                        </div>
-                        <div class="pool-list" id="poolList">
-                            <div class="empty-pool">No sessions to add yet</div>
-                        </div>
-                        <button class="btn-add-new" onclick="openAddModal()">➕ Add New Session</button>
-                    </div>
-                    
-                    <div id="timetableContainer"></div>
-                </div>
-            </div>
-
-            <div>
+                <!-- Study Statistics -->
                 <div class="card">
-                    <h2>💡 Daily Tip</h2>
-                    <div class="tip-content" id="dailyTip"></div>
-                </div>
-
-                <div class="card" style="margin-top: 20px;">
-                    <h2>📊 Study Analytics</h2>
+                    <h2>📊 Study Statistics</h2>
                     <div class="stats-grid">
                         <div class="stat-card">
-                            <div class="stat-value" id="totalTime">0h</div>
-                            <div class="stat-label">Total Time</div>
+                            <div class="stat-value" id="totalHours">0</div>
+                            <div class="stat-label">Total Hours</div>
                         </div>
                         <div class="stat-card">
-                            <div class="stat-value" id="todayTime">0h</div>
-                            <div class="stat-label">Today</div>
-                        </div>
-                        <div class="stat-card">
-                            <div class="stat-value" id="sessionCount">0</div>
+                            <div class="stat-value" id="sessionsCompleted">0</div>
                             <div class="stat-label">Sessions Done</div>
                         </div>
                         <div class="stat-card">
-                            <div class="stat-value" id="averageSession">0m</div>
-                            <div class="stat-label">Avg Session</div>
+                            <div class="stat-value" id="daysLeft">0</div>
+                            <div class="stat-label">Days to Exam</div>
                         </div>
                     </div>
-
                     <div class="subject-breakdown">
-                        <h3 style="margin-bottom: 15px; color: #2d3748;">Time by Subject</h3>
-                        <div id="subjectTimeBreakdown"></div>
+                        <h3 style="margin-bottom: 15px; color: #667eea;">By Subject</h3>
+                        <div id="subjectStats">
+                            <!-- Subject breakdown will be added here -->
+                        </div>
                     </div>
                 </div>
 
-                <div class="card" style="margin-top: 20px;">
-                    <h2>🎯 Catch-Up Box</h2>
-                    <p style="color: #718096; margin-bottom: 15px;">Tasks that missed their scheduled time are automatically added here.</p>
-                    <div id="catchupContainer"></div>
+                <!-- Study Tips -->
+                <div class="card">
+                    <h2>💡 Study Tip of the Day</h2>
+                    <div class="tip-content" id="studyTip">
+                        Use active recall: Test yourself frequently instead of just re-reading notes. This strengthens memory retention!
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 
     <script>
+        // TIMER FUNCTIONALITY
         let timerInterval = null;
-        let elapsedSeconds = 0;
+        let seconds = 0;
         let isRunning = false;
-        let currentSession = null;
-        let timerStartTime = null;
+        let studyLog = JSON.parse(localStorage.getItem('studyLog') || '{}');
 
-        const dailyTips = [
-            "🧠 Take a 5-10 minute break every hour. Your brain needs it!",
-            "💧 Stay hydrated! Keep water nearby while studying.",
-            "📝 Active recall is more effective than re-reading. Test yourself!",
-            "🎯 Focus on understanding concepts, not just memorizing.",
-            "🌅 Study your hardest subjects when you're most alert.",
-            "✅ Break big topics into smaller chunks. Progress = motivation!",
-            "🎵 Try different study environments. Change can boost focus!",
-            "😴 Sleep is crucial for memory consolidation. Don't skip it!",
-            "🍎 Healthy snacks fuel your brain. Avoid sugar crashes!",
-            "👥 Explain concepts to someone else. Teaching = learning!",
-            "📱 Put your phone in another room. Out of sight, out of mind!",
-            "🎨 Use colors, diagrams, and mind maps for visual learning.",
-            "⏰ Use the Pomodoro Technique: 25 min study, 5 min break.",
-            "🎯 Set specific goals for each study session.",
-            "🌟 Celebrate small wins! You're making progress every day.",
-            "🧘 Start with 2 minutes of deep breathing to focus your mind.",
-            "📚 Review your notes within 24 hours of learning something new.",
-            "🎪 Make studying fun! Create mnemonics and silly associations.",
-            "💪 Your brain is a muscle. The more you use it, the stronger it gets!",
-            "🌈 Stay positive! You've got this! One session at a time."
-        ];
-
-        const timetableData = {
-            "Week 2: Oct 25-31 ⚠️ English P1 Oct 29, Math P1 Oct 31": [
-                {
-                    date: "SAT Oct 25",
-                    sessions: [
-                        { subject: "Life Sciences P1", topic: "Receptors", id: "sat25-1" },
-                        { subject: "Life Sciences P1", topic: "Receptors", id: "sat25-2" },
-                        { subject: "Life Sciences P1", topic: "Homeostasis", id: "sat25-3" }
-                    ]
-                },
-                {
-                    date: "SUN Oct 26",
-                    sessions: [
-                        { subject: "Mathematics P1", topic: "Calculus", id: "sun26-1" },
-                        { subject: "Mathematics P1", topic: "Calculus", id: "sun26-2" },
-                        { subject: "Mathematics P1", topic: "Algebra", id: "sun26-3" }
-                    ]
-                },
-                {
-                    date: "MON Oct 27",
-                    note: "2 days before English P1 - INTENSIVE",
-                    sessions: [
-                        { subject: "English P1", topic: "Comprehension", id: "mon27-1" },
-                        { subject: "English P1", topic: "Comprehension", id: "mon27-2" },
-                        { subject: "English P1", topic: "Language in Context", id: "mon27-3" }
-                    ]
-                },
-                {
-                    date: "TUE Oct 28",
-                    note: "1 day before English P1 - INTENSIVE",
-                    sessions: [
-                        
-                        
-                        
-                    ]
-                },
-                {
-                    date: "WED Oct 29",
-                    exam: "English P1"
-                },
-                {
-                    date: "THU Oct 30",
-                    note: "1 day before Math P1 - INTENSIVE, TUTORING 4-5pm",
-                    sessions: [
-                        
-                        { subject: "Mathematics P1", topic: "Finance & Probability", id: "thu30-2" },
-                        { subject: "Mathematics P1", topic: "Mock P1 + Review", id: "thu30-3" }
-                    ]
-                },
-                {
-                    date: "FRI Oct 31",
-                    exam: "Math P1",
-                    note: "TUTORING 4-5pm"
-                }
-            ],
-            "Week 3: Nov 1-7 ⚠️ Math P2 Nov 3": [
-                {
-                    date: "SAT Nov 1",
-                    note: "2 days before Math P2 - INTENSIVE",
-                    sessions: [
-                        { subject: "Mathematics P2", topic: "Euclidean Geometry", id: "sat1-1" },
-                        { subject: "Mathematics P2", topic: "Euclidean Geometry", id: "sat1-2" },
-                        { subject: "Mathematics P2", topic: "Statistics", id: "sat1-3" }
-                    ]
-                },
-                {
-                    date: "SUN Nov 2",
-                    note: "1 day before Math P2 - INTENSIVE",
-                    sessions: [
-                        { subject: "Mathematics P2", topic: "Analytical Geometry", id: "sun2-1" },
-                        { subject: "Mathematics P2", topic: "Trigonometry", id: "sun2-2" },
-                        { subject: "Mathematics P2", topic: "Mock P2 + Review", id: "sun2-3" }
-                    ]
-                },
-                {
-                    date: "MON Nov 3",
-                    exam: "Math P2"
-                },
-                {
-                    date: "TUE Nov 4",
-                    sessions: [
-                        { subject: "Consumer Studies", topic: "Food & Nutrition", id: "tue4-1" },
-                        { subject: "Consumer Studies", topic: "Food & Nutrition", id: "tue4-2" },
-                        { subject: "Consumer Studies", topic: "Clothing", id: "tue4-3" }
-                    ]
-                },
-                {
-                    date: "WED Nov 5",
-                    note: "No tutoring - math exams done!",
-                    sessions: [
-                        { subject: "Life Sciences P2", topic: "Evolution", id: "wed5-1" },
-                        { subject: "Life Sciences P2", topic: "Evolution", id: "wed5-2" },
-                        { subject: "Life Sciences P2", topic: "DNA", id: "wed5-3" }
-                    ]
-                },
-                {
-                    date: "THU Nov 6",
-                    note: "FULL DAY, NO tutoring",
-                    sessions: [
-                        { subject: "Consumer Studies", topic: "Entrepreneurship", id: "thu6-1" },
-                        { subject: "Consumer Studies", topic: "Entrepreneurship", id: "thu6-2" },
-                        
-                    ]
-                },
-                {
-                    date: "FRI Nov 7",
-                    rest: true
-                }
-            ],
-            "Week 4: Nov 8-14 ⚠️ Geo P1 Nov 12, Eng P2 Nov 13, Life Sci P1 Nov 14": [
-                {
-                    date: "SAT Nov 8",
-                    sessions: [
-                        { subject: "Life Sciences P1", topic: "Homeostasis", id: "sat8-1" },
-                        { subject: "Life Sciences P1", topic: "Human Reproduction", id: "sat8-2" },
-                        { subject: "Life Sciences P1", topic: "Human Reproduction", id: "sat8-3" }
-                    ]
-                },
-                {
-                    date: "SUN Nov 9",
-                    sessions: [
-                        { subject: "Life Sciences P2", topic: "DNA", id: "sun9-1" },
-                        { subject: "Life Sciences P2", topic: "Meiosis", id: "sun9-2" },
-                        { subject: "Life Sciences P2", topic: "Meiosis", id: "sun9-3" }
-                    ]
-                },
-                {
-                    date: "MON Nov 10",
-                    note: "2 days before Geo P1 - INTENSIVE",
-                    sessions: [
-                        { subject: "Geography P1", topic: "Climatology", id: "mon10-1" },
-                        { subject: "Geography P1", topic: "Climatology", id: "mon10-2" },
-                        { subject: "Geography P1", topic: "Geomorphology", id: "mon10-3" }
-                    ]
-                },
-                {
-                    date: "TUE Nov 11",
-                    note: "1 day before Geo P1 - INTENSIVE",
-                    sessions: [
-                        { subject: "Geography P1", topic: "Geomorphology", id: "tue11-1" },
-                        { subject: "Geography P1", topic: "Mapwork", id: "tue11-2" },
-                        { subject: "Geography P1", topic: "Mock P1 + Review", id: "tue11-3" }
-                    ]
-                },
-                {
-                    date: "WED Nov 12",
-                    exam: "Geography P1",
-                    note: "Evening study - 1 day before Eng P2",
-                    sessions: [
-                        { subject: "English P2", topic: "Poetry + Literature", id: "wed12-1" },
-                        { subject: "English P2", topic: "Poetry + Literature", id: "wed12-2" }
-                    ]
-                },
-                {
-                    date: "THU Nov 13",
-                    exam: "English P2 (LAST English!)",
-                    note: "Afternoon study - 1 day before Life Sci P1",
-                    sessions: [
-                        
-                        
-                    ]
-                },
-                {
-                    date: "FRI Nov 14",
-                    exam: "Life Sciences P1"
-                }
-            ],
-            "Week 5: Nov 15-21 ⚠️ Life Sci P2 Nov 17, Geo P2 Nov 18, Econ P1 Nov 19, Econ P2 Nov 21": [
-                {
-                    date: "SAT Nov 15",
-                    note: "2 days before Life Sci P2 - INTENSIVE",
-                    sessions: [
-                        { subject: "Life Sciences P2", topic: "Genetics", id: "sat15-1" },
-                        { subject: "Life Sciences P2", topic: "Genetics", id: "sat15-2" },
-                        
-                    ]
-                },
-                {
-                    date: "SUN Nov 16",
-                    note: "1 day before Life Sci P2 - INTENSIVE",
-                    sessions: [
-                        
-                        
-                        { subject: "Life Sciences P2", topic: "Mock P2 + Review", id: "sun16-3" }
-                    ]
-                },
-                {
-                    date: "MON Nov 17",
-                    exam: "Life Sciences P2 (LAST Life Sci!)",
-                    note: "Evening study - 1 day before Geo P2",
-                    sessions: [
-                        { subject: "Geography P2", topic: "Settlement Geography", id: "mon17-1" },
-                        { subject: "Geography P2", topic: "Settlement Geography", id: "mon17-2" }
-                    ]
-                },
-                {
-                    date: "TUE Nov 18",
-                    exam: "Geography P2 (LAST Geography!)",
-                    note: "Evening study - 1 day before Econ P1",
-                    sessions: [
-                        { subject: "Economics P1", topic: "Macroeconomics", id: "tue18-1" },
-                        { subject: "Economics P1", topic: "Economic Pursuits", id: "tue18-2" }
-                    ]
-                },
-                {
-                    date: "WED Nov 19",
-                    exam: "Economics P1",
-                    note: "Evening study - 2 days before Econ P2"
-                },
-                {
-                    date: "THU Nov 20",
-                    note: "FULL DAY, 1 day before Econ P2 - INTENSIVE, NO tutoring",
-                    sessions: [
-                        { subject: "Economics P2", topic: "Microeconomics", id: "thu20-1" },
-                        { subject: "Economics P2", topic: "Microeconomics", id: "thu20-2" },
-                        
-                    ]
-                },
-                {
-                    date: "FRI Nov 21",
-                    exam: "Economics P2 (LAST Economics!)"
-                }
-            ],
-            "Week 6: Nov 22-25 ⚠️ Consumer Studies Nov 25 (FINAL EXAM!)": [
-                {
-                    date: "SAT Nov 22",
-                    sessions: [
-                        
-                        
-                        
-                    ]
-                },
-                {
-                    date: "SUN Nov 23",
-                    note: "2 days before Consumer - INTENSIVE",
-                    sessions: [
-                        
-                        
-                        
-                    ]
-                },
-                {
-                    date: "MON Nov 24",
-                    note: "1 day before Consumer - INTENSIVE",
-                    sessions: [
-                        
-                        
-                        { subject: "Consumer Studies", topic: "Mock + Final Review", id: "mon24-3" }
-                    ]
-                },
-                {
-                    date: "TUE Nov 25",
-                    exam: "Consumer Studies (FINAL EXAM!)"
-                }
-            ]
-        };
-
-        document.addEventListener('DOMContentLoaded', function() {
-            loadDailyTip();
-            loadTimetable();
-            loadAnalytics();
-            loadCatchupBox();
-            restoreTimerState();
-            updateTimerDisplay();
-        });
-
-        function loadDailyTip() {
-            const today = new Date();
-            const dayOfYear = Math.floor((today - new Date(today.getFullYear(), 0, 0)) / 86400000);
-            const tipIndex = dayOfYear % dailyTips.length;
-            document.getElementById('dailyTip').textContent = dailyTips[tipIndex];
-        }
-
-        function restoreTimerState() {
-            const savedState = localStorage.getItem('timerState');
-            if (savedState) {
-                const state = JSON.parse(savedState);
-                
-                if (state.isRunning) {
-                    const now = Date.now();
-                    const timePassed = Math.floor((now - state.startTime) / 1000);
-                    elapsedSeconds = state.elapsedSeconds + timePassed;
-                    
-                    document.getElementById('currentSubject').value = state.subject;
-                    document.getElementById('currentStudySubject').textContent = `Studying: ${state.subject}`;
-                    
-                    isRunning = true;
-                    timerStartTime = state.startTime;
-                    currentSession = {
-                        subject: state.subject,
-                        startTime: state.startTime,
-                        elapsedSeconds: state.elapsedSeconds
-                    };
-                    
-                    document.getElementById('startBtn').disabled = true;
-                    document.getElementById('pauseBtn').disabled = false;
-                    
-                    timerInterval = setInterval(() => {
-                        elapsedSeconds++;
-                        updateTimerDisplay();
-                        
-                        if (elapsedSeconds % 10 === 0) {
-                            saveTimerState();
-                        }
-                    }, 1000);
-                }
-            }
-        }
-
-        function saveTimerState() {
-            if (isRunning && currentSession) {
-                const state = {
-                    isRunning: true,
-                    subject: currentSession.subject,
-                    startTime: timerStartTime,
-                    elapsedSeconds: Math.floor((Date.now() - timerStartTime) / 1000),
-                    lastUpdate: Date.now()
-                };
-                localStorage.setItem('timerState', JSON.stringify(state));
-            } else {
-                localStorage.removeItem('timerState');
-            }
+        function updateTimerDisplay() {
+            const hrs = Math.floor(seconds / 3600);
+            const mins = Math.floor((seconds % 3600) / 60);
+            const secs = seconds % 60;
+            document.getElementById('timerDisplay').textContent = 
+                `${hrs.toString().padStart(2, '0')}:${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
         }
 
         function startTimer() {
-            const subject = document.getElementById('currentSubject').value;
+            const subject = document.getElementById('timerSubject').value;
             if (!subject) {
                 alert('Please select a subject first!');
                 return;
             }
-
+            
             isRunning = true;
-            timerStartTime = Date.now() - (elapsedSeconds * 1000);
             document.getElementById('startBtn').disabled = true;
             document.getElementById('pauseBtn').disabled = false;
-            document.getElementById('currentStudySubject').textContent = `Studying: ${subject}`;
-
-            currentSession = {
-                subject: subject,
-                startTime: timerStartTime,
-                elapsedSeconds: elapsedSeconds
-            };
-
-            saveTimerState();
-
+            
             timerInterval = setInterval(() => {
-                elapsedSeconds++;
+                seconds++;
                 updateTimerDisplay();
-                
-                if (elapsedSeconds % 10 === 0) {
-                    saveTimerState();
-                }
             }, 1000);
         }
 
         function pauseTimer() {
-            if (!isRunning) return;
-
             isRunning = false;
             clearInterval(timerInterval);
             document.getElementById('startBtn').disabled = false;
             document.getElementById('pauseBtn').disabled = true;
-
-            localStorage.removeItem('timerState');
-
-            if (currentSession) {
-                saveSession();
+            
+            const subject = document.getElementById('timerSubject').value;
+            if (subject && seconds > 0) {
+                if (!studyLog[subject]) {
+                    studyLog[subject] = 0;
+                }
+                studyLog[subject] += seconds;
+                localStorage.setItem('studyLog', JSON.stringify(studyLog));
+                updateStatistics();
             }
         }
 
         function resetTimer() {
-            if (isRunning) {
-                pauseTimer();
-            }
-            
-            elapsedSeconds = 0;
-            timerStartTime = null;
+            clearInterval(timerInterval);
+            seconds = 0;
+            isRunning = false;
             updateTimerDisplay();
-            document.getElementById('currentStudySubject').textContent = '';
-            document.getElementById('currentSubject').value = '';
-            currentSession = null;
-            
-            localStorage.removeItem('timerState');
+            document.getElementById('startBtn').disabled = false;
+            document.getElementById('pauseBtn').disabled = true;
         }
 
-        function updateTimerDisplay() {
-            const hours = Math.floor(elapsedSeconds / 3600);
-            const minutes = Math.floor((elapsedSeconds % 3600) / 60);
-            const seconds = elapsedSeconds % 60;
-            
-            document.getElementById('timerDisplay').textContent = 
-                `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
-        }
-
-        function saveSession() {
-            const sessions = JSON.parse(localStorage.getItem('studySessions') || '[]');
-            const session = {
-                subject: currentSession.subject,
-                duration: elapsedSeconds,
-                date: new Date().toISOString(),
-                timestamp: Date.now()
-            };
-            sessions.push(session);
-            localStorage.setItem('studySessions', JSON.stringify(sessions));
-            loadAnalytics();
-        }
-
-        function loadTimetable() {
-            const container = document.getElementById('timetableContainer');
-            const completedSessions = JSON.parse(localStorage.getItem('completedSessions') || '{}');
-            
-            let html = '';
-            let totalSessions = 0;
-            let completedCount = 0;
-
-            for (const [week, days] of Object.entries(timetableData)) {
-                html += `<div class="week-section">
-                    <div class="week-header">${week}</div>`;
-                
-                days.forEach(day => {
-                    html += `<div class="day-card">
-                        <div class="day-header">
-                            <div class="day-title">${day.date}</div>`;
-                    
-                    if (day.exam) {
-                        html += `<span class="exam-badge">🎓 ${day.exam} EXAM</span>`;
-                    } else if (day.rest) {
-                        html += `<span class="rest-badge">✨ REST DAY</span>`;
-                    }
-                    
-                    html += `</div>`;
-                    
-                    if (day.note) {
-                        html += `<div style="color: #718096; font-size: 0.9em; margin-bottom: 10px;">${day.note}</div>`;
-                    }
-                    
-                    if (day.sessions && day.sessions.length > 0) {
-                        html += `<div class="session-list">`;
-                        day.sessions.forEach(session => {
-                            totalSessions++;
-                            const isCompleted = completedSessions[session.id] || false;
-                            if (isCompleted) completedCount++;
-                            
-                            const badgeClass = `badge-${session.subject.toLowerCase().includes('life') ? 'life' : 
-                                                         session.subject.toLowerCase().includes('math') ? 'math' :
-                                                         session.subject.toLowerCase().includes('english') ? 'english' :
-                                                         session.subject.toLowerCase().includes('consumer') ? 'consumer' :
-                                                         session.subject.toLowerCase().includes('geography') ? 'geography' :
-                                                         'economics'}`;
-                            
-                            html += `<div class="session-item" draggable="true" data-session-id="${session.id}" data-day="${day.date}">
-                                <span class="drag-handle">⋮⋮</span>
-                                <input type="checkbox" class="session-checkbox" 
-                                       ${isCompleted ? 'checked' : ''} 
-                                       onchange="toggleSession('${session.id}', '${day.date}', '${session.subject}', '${session.topic}')">
-                                <span class="session-text ${isCompleted ? 'completed' : ''}">
-                                    ${session.topic}
-                                </span>
-                                <span class="subject-badge ${badgeClass}">${session.subject}</span>
-                            </div>`;
-                        });
-                        html += `</div>`;
-                    }
-                    
-                    html += `</div>`;
-                });
-                
-                html += `</div>`;
-            }
-            
-            container.innerHTML = html;
-            
-            const percentage = totalSessions > 0 ? Math.round((completedCount / totalSessions) * 100) : 0;
-            document.getElementById('overallProgress').style.width = percentage + '%';
-            document.getElementById('overallProgress').textContent = percentage + '%';
-            
-            // Add drag and drop functionality
-            addDragAndDrop();
-        }
-
-        function addDragAndDrop() {
-            const items = document.querySelectorAll('.session-item');
-            const lists = document.querySelectorAll('.session-list');
-
-            items.forEach(item => {
-                item.setAttribute('draggable', 'true');
-                
-                item.addEventListener('dragstart', handleSessionDragStart);
-                item.addEventListener('dragend', handleDragEnd);
-            });
-
-            lists.forEach(list => {
-                list.addEventListener('dragover', handleDragOver);
-                list.addEventListener('dragenter', handleDragEnter);
-                list.addEventListener('dragleave', handleDragLeave);
-                list.addEventListener('drop', handleDrop);
-            });
-        }
-
-        function saveSessionOrder() {
-            // Get all session lists
-            const sessionLists = document.querySelectorAll('.session-list');
-            const orderData = {};
-
-            sessionLists.forEach(list => {
-                const dayCard = list.closest('.day-card');
-                const dayTitle = dayCard.querySelector('.day-title').textContent;
-                const sessions = Array.from(list.querySelectorAll('.session-item'));
-                
-                orderData[dayTitle] = sessions.map(item => item.dataset.sessionId);
-            });
-
-            localStorage.setItem('sessionOrder', JSON.stringify(orderData));
-        }
-
-        function loadSessionOrder() {
-            const orderData = JSON.parse(localStorage.getItem('sessionOrder') || '{}');
-            return orderData;
-        }
-
-        function toggleSession(sessionId, date, subject, topic) {
-            const completedSessions = JSON.parse(localStorage.getItem('completedSessions') || '{}');
-            const catchupItems = JSON.parse(localStorage.getItem('catchupItems') || '[]');
-            
-            if (completedSessions[sessionId]) {
-                delete completedSessions[sessionId];
-                
-                const sessionDate = parseDate(date);
-                if (sessionDate < new Date()) {
-                    if (!catchupItems.find(item => item.id === sessionId)) {
-                        catchupItems.push({
-                            id: sessionId,
-                            date: date,
-                            subject: subject,
-                            topic: topic,
-                            addedAt: new Date().toISOString()
-                        });
-                    }
-                }
-            } else {
-                completedSessions[sessionId] = true;
-                
-                const index = catchupItems.findIndex(item => item.id === sessionId);
-                if (index > -1) {
-                    catchupItems.splice(index, 1);
-                }
-            }
-            
-            localStorage.setItem('completedSessions', JSON.stringify(completedSessions));
-            localStorage.setItem('catchupItems', JSON.stringify(catchupItems));
-            loadTimetable();
-            loadCatchupBox();
-        }
-
-        function parseDate(dateString) {
-            const parts = dateString.split(' ');
-            const month = parts[1];
-            const day = parseInt(parts[2]);
-            
-            const monthMap = {
-                'Oct': 9,
-                'Nov': 10
-            };
-            
-            return new Date(2025, monthMap[month], day);
-        }
-
-        function loadCatchupBox() {
-            const container = document.getElementById('catchupContainer');
-            const catchupItems = JSON.parse(localStorage.getItem('catchupItems') || '[]');
-            const completedSessions = JSON.parse(localStorage.getItem('completedSessions') || '{}');
-            
-            // Define the start date (Oct 25, 2025)
-            const startDate = new Date(2025, 9, 25); // Month is 0-indexed
-            const today = new Date();
-            
-            // Sessions before Oct 25 that should be in catch-up
-            const oldSessions = [
-                { id: "wed22-1", date: "WED Oct 22", subject: "English P3", topic: "Creative Writing" },
-                { id: "wed22-2", date: "WED Oct 22", subject: "English P3", topic: "Creative Writing" },
-                { id: "wed22-3", date: "WED Oct 22", subject: "English P3", topic: "Transactional Writing" }
-            ];
-            
-            // Add old sessions to catch-up if not completed and not already there
-            oldSessions.forEach(session => {
-                if (!completedSessions[session.id] && !catchupItems.find(item => item.id === session.id)) {
-                    catchupItems.push({
-                        id: session.id,
-                        date: session.date,
-                        subject: session.subject,
-                        topic: session.topic,
-                        addedAt: new Date().toISOString()
-                    });
-                }
-            });
-            
-            // Auto-add overdue sessions from timetable
-            for (const [week, days] of Object.entries(timetableData)) {
-                days.forEach(day => {
-                    if (day.sessions) {
-                        const sessionDate = parseDate(day.date);
-                        day.sessions.forEach(session => {
-                            if (sessionDate < today && 
-                                !completedSessions[session.id] && 
-                                !catchupItems.find(item => item.id === session.id)) {
-                                catchupItems.push({
-                                    id: session.id,
-                                    date: day.date,
-                                    subject: session.subject,
-                                    topic: session.topic,
-                                    addedAt: new Date().toISOString()
-                                });
-                            }
-                        });
-                    }
-                });
-            }
-            
-            localStorage.setItem('catchupItems', JSON.stringify(catchupItems));
-            
-            if (catchupItems.length === 0) {
-                container.innerHTML = '<div class="empty-state">🎉 No catch-up items! You\'re all caught up!</div>';
-                return;
-            }
-            
-            let html = '';
-            catchupItems.forEach(item => {
-                html += `<div class="catchup-item">
-                    <div class="item-header">
-                        <div class="catchup-title">${item.subject}</div>
-                        <div class="catchup-date">Due: ${item.date}</div>
-                    </div>
-                    <div class="catchup-text">${item.topic}</div>
-                    <button class="btn btn-success btn-small" onclick="completeCatchup('${item.id}')">✅ Mark as Done</button>
-                </div>`;
-            });
-            
-            container.innerHTML = html;
-        }
-
-        function completeCatchup(sessionId) {
-            const completedSessions = JSON.parse(localStorage.getItem('completedSessions') || '{}');
-            const catchupItems = JSON.parse(localStorage.getItem('catchupItems') || '[]');
-            
-            completedSessions[sessionId] = true;
-            const index = catchupItems.findIndex(item => item.id === sessionId);
-            if (index > -1) {
-                catchupItems.splice(index, 1);
-            }
-            
-            localStorage.setItem('completedSessions', JSON.stringify(completedSessions));
-            localStorage.setItem('catchupItems', JSON.stringify(catchupItems));
-            loadTimetable();
-            loadCatchupBox();
-        }
-
-        function loadAnalytics() {
-            const sessions = JSON.parse(localStorage.getItem('studySessions') || '[]');
-            
+        function updateStatistics() {
             let totalSeconds = 0;
-            let todaySeconds = 0;
-            const subjectTimes = {};
-            const today = new Date().toDateString();
+            for (let subject in studyLog) {
+                totalSeconds += studyLog[subject];
+            }
             
-            sessions.forEach(session => {
-                totalSeconds += session.duration;
-                
-                const sessionDate = new Date(session.date).toDateString();
-                if (sessionDate === today) {
-                    todaySeconds += session.duration;
-                }
-                
-                if (!subjectTimes[session.subject]) {
-                    subjectTimes[session.subject] = 0;
-                }
-                subjectTimes[session.subject] += session.duration;
+            const totalHours = (totalSeconds / 3600).toFixed(1);
+            document.getElementById('totalHours').textContent = totalHours;
+            
+            const sessionsCompleted = countCompletedSessions();
+            document.getElementById('sessionsCompleted').textContent = sessionsCompleted;
+            
+            const firstExamDate = new Date('2024-11-04');
+            const today = new Date();
+            const daysLeft = Math.ceil((firstExamDate - today) / (1000 * 60 * 60 * 24));
+            document.getElementById('daysLeft').textContent = Math.max(0, daysLeft);
+            
+            const subjectStatsDiv = document.getElementById('subjectStats');
+            subjectStatsDiv.innerHTML = '';
+            
+            const sortedSubjects = Object.entries(studyLog).sort((a, b) => b[1] - a[1]);
+            
+            sortedSubjects.forEach(([subject, seconds]) => {
+                const hours = (seconds / 3600).toFixed(1);
+                const div = document.createElement('div');
+                div.className = 'subject-item';
+                div.innerHTML = `
+                    <span class="subject-name">${subject}</span>
+                    <span class="subject-time">${hours}h</span>
+                `;
+                subjectStatsDiv.appendChild(div);
             });
-            
-            document.getElementById('totalTime').textContent = formatHours(totalSeconds);
-            document.getElementById('todayTime').textContent = formatHours(todaySeconds);
-            document.getElementById('sessionCount').textContent = sessions.length;
-            
-            const avgSeconds = sessions.length > 0 ? totalSeconds / sessions.length : 0;
-            document.getElementById('averageSession').textContent = formatMinutes(avgSeconds);
-            
-            const breakdownHtml = Object.entries(subjectTimes)
-                .sort((a, b) => b[1] - a[1])
-                .map(([subject, seconds]) => `
-                    <div class="subject-item">
-                        <span class="subject-name">${subject}</span>
-                        <span class="subject-time">${formatHours(seconds)}</span>
-                    </div>
-                `).join('');
-            
-            document.getElementById('subjectTimeBreakdown').innerHTML = breakdownHtml || 
-                '<div class="empty-state" style="padding: 20px;">No study time recorded yet</div>';
         }
 
-        function formatHours(seconds) {
-            const hours = Math.floor(seconds / 3600);
-            const minutes = Math.floor((seconds % 3600) / 60);
-            if (hours > 0) {
-                return `${hours}h ${minutes}m`;
+        function countCompletedSessions() {
+            let count = 0;
+            for (let week in timetableData) {
+                for (let day of timetableData[week]) {
+                    if (day.sessions) {
+                        count += day.sessions.filter(s => s.completed).length;
+                    }
+                }
             }
-            return `${minutes}m`;
+            return count;
         }
 
-        function formatMinutes(seconds) {
-            return Math.round(seconds / 60) + 'm';
+        // TIMETABLE DATA
+        let timetableData = {
+            "Week 1": [
+                {
+                    date: "SAT Oct 26",
+                    sessions: [
+                        { id: "satoct26-1", subject: "Mathematics P2", topic: "Calculus", completed: false },
+                        { id: "satoct26-2", subject: "Physics", topic: "Mechanics", completed: false },
+                        { id: "satoct26-3", subject: "Chemistry", topic: "Organic Chemistry", completed: false }
+                    ]
+                },
+                {
+                    date: "SUN Oct 27",
+                    sessions: [
+                        { id: "sunoct27-1", subject: "Biology", topic: "Cell Biology", completed: false },
+                        { id: "sunoct27-2", subject: "Mathematics P1", topic: "Algebra", completed: false },
+                        { id: "sunoct27-3", subject: "History", topic: "WWI", completed: false }
+                    ]
+                },
+                {
+                    date: "MON Oct 28",
+                    sessions: [
+                        { id: "monoct28-1", subject: "Geography", topic: "Climate Change", completed: false },
+                        { id: "monoct28-2", subject: "English", topic: "Poetry Analysis", completed: false }
+                    ]
+                },
+                {
+                    date: "TUE Oct 29",
+                    sessions: [
+                        { id: "tueoct29-1", subject: "IT", topic: "Programming Basics", completed: false },
+                        { id: "tueoct29-2", subject: "Mathematics P2", topic: "Statistics", completed: false }
+                    ]
+                },
+                {
+                    date: "WED Oct 30",
+                    sessions: [
+                        { id: "wedoct30-1", subject: "Physics", topic: "Electricity", completed: false },
+                        { id: "wedoct30-2", subject: "Chemistry", topic: "Inorganic Chemistry", completed: false }
+                    ]
+                },
+                {
+                    date: "THU Oct 31",
+                    sessions: [
+                        { id: "thuoct31-1", subject: "Biology", topic: "Genetics", completed: false },
+                        { id: "thuoct31-2", subject: "History", topic: "WWII", completed: false }
+                    ]
+                },
+                {
+                    date: "FRI Nov 01",
+                    sessions: [
+                        { id: "frinov01-1", subject: "Mathematics P1", topic: "Trigonometry", completed: false },
+                        { id: "frinov01-2", subject: "Geography", topic: "Urban Geography", completed: false }
+                    ]
+                }
+            ],
+            "Week 2": [
+                {
+                    date: "SAT Nov 02",
+                    sessions: [
+                        { id: "satnov02-1", subject: "English", topic: "Essay Writing", completed: false },
+                        { id: "satnov02-2", subject: "IT", topic: "Data Structures", completed: false }
+                    ]
+                },
+                {
+                    date: "SUN Nov 03",
+                    sessions: [
+                        { id: "sunnov03-1", subject: "Mathematics P2", topic: "Integration", completed: false },
+                        { id: "sunnov03-2", subject: "Mock Exam", topic: "Math P2 Practice", completed: false }
+                    ]
+                },
+                {
+                    date: "MON Nov 04",
+                    exam: "Mathematics P2"
+                },
+                {
+                    date: "TUE Nov 05",
+                    sessions: [
+                        { id: "tuenov05-1", subject: "Physics", topic: "Thermodynamics", completed: false },
+                        { id: "tuenov05-2", subject: "Chemistry", topic: "Chemical Reactions", completed: false }
+                    ]
+                },
+                {
+                    date: "WED Nov 06",
+                    sessions: [
+                        { id: "wednov06-1", subject: "Biology", topic: "Ecology", completed: false },
+                        { id: "wednov06-2", subject: "Mock Exam", topic: "Physics Practice", completed: false }
+                    ]
+                },
+                {
+                    date: "THU Nov 07",
+                    exam: "Physics"
+                },
+                {
+                    date: "FRI Nov 08",
+                    sessions: [
+                        { id: "frinov08-1", subject: "Chemistry", topic: "Equilibrium", completed: false },
+                        { id: "frinov08-2", subject: "History", topic: "Cold War", completed: false }
+                    ]
+                }
+            ],
+            "Week 3": [
+                {
+                    date: "SAT Nov 09",
+                    sessions: [
+                        { id: "satnov09-1", subject: "Mock Exam", topic: "Chemistry Practice", completed: false }
+                    ]
+                },
+                {
+                    date: "SUN Nov 10",
+                    rest: true
+                },
+                {
+                    date: "MON Nov 11",
+                    exam: "Chemistry"
+                },
+                {
+                    date: "TUE Nov 12",
+                    sessions: [
+                        { id: "tuenov12-1", subject: "Biology", topic: "Evolution", completed: false },
+                        { id: "tuenov12-2", subject: "Mathematics P1", topic: "Geometry", completed: false }
+                    ]
+                },
+                {
+                    date: "WED Nov 13",
+                    sessions: [
+                        { id: "wednov13-1", subject: "Mock Exam", topic: "Biology Practice", completed: false }
+                    ]
+                },
+                {
+                    date: "THU Nov 14",
+                    exam: "Biology"
+                },
+                {
+                    date: "FRI Nov 15",
+                    sessions: [
+                        { id: "frinov15-1", subject: "Geography", topic: "Economic Geography", completed: false },
+                        { id: "frinov15-2", subject: "English", topic: "Shakespeare", completed: false }
+                    ]
+                }
+            ],
+            "Week 4": [
+                {
+                    date: "SAT Nov 16",
+                    sessions: [
+                        { id: "satnov16-1", subject: "Mock Exam", topic: "Math P1 Practice", completed: false }
+                    ]
+                },
+                {
+                    date: "SUN Nov 17",
+                    rest: true
+                },
+                {
+                    date: "MON Nov 18",
+                    exam: "Mathematics P1"
+                },
+                {
+                    date: "TUE Nov 19",
+                    sessions: [
+                        { id: "tuenov19-1", subject: "History", topic: "Modern History", completed: false },
+                        { id: "tuenov19-2", subject: "Geography", topic: "Physical Geography", completed: false }
+                    ]
+                },
+                {
+                    date: "WED Nov 20",
+                    sessions: [
+                        { id: "wednov20-1", subject: "Mock Exam", topic: "History Practice", completed: false }
+                    ]
+                },
+                {
+                    date: "THU Nov 21",
+                    exam: "History"
+                },
+                {
+                    date: "FRI Nov 22",
+                    sessions: [
+                        { id: "frinov22-1", subject: "English", topic: "Novel Study", completed: false },
+                        { id: "frinov22-2", subject: "IT", topic: "Algorithms", completed: false }
+                    ]
+                }
+            ],
+            "Week 5": [
+                {
+                    date: "SAT Nov 23",
+                    sessions: [
+                        { id: "satnov23-1", subject: "Mock Exam", topic: "Geography Practice", completed: false }
+                    ]
+                },
+                {
+                    date: "SUN Nov 24",
+                    rest: true
+                },
+                {
+                    date: "MON Nov 25",
+                    exam: "Geography"
+                },
+                {
+                    date: "TUE Nov 26",
+                    sessions: [
+                        { id: "tuenov26-1", subject: "English", topic: "Exam Technique", completed: false },
+                        { id: "tuenov26-2", subject: "IT", topic: "Review", completed: false }
+                    ]
+                },
+                {
+                    date: "WED Nov 27",
+                    sessions: [
+                        { id: "wednov27-1", subject: "Mock Exam", topic: "English Practice", completed: false }
+                    ]
+                },
+                {
+                    date: "THU Nov 28",
+                    exam: "English"
+                },
+                {
+                    date: "FRI Nov 29",
+                    sessions: [
+                        { id: "frinov29-1", subject: "Mock Exam", topic: "IT Practice", completed: false }
+                    ]
+                }
+            ]
+        };
+
+        // Load from localStorage if available
+        const savedData = localStorage.getItem('timetableData');
+        if (savedData) {
+            timetableData = JSON.parse(savedData);
+        } else {
+            localStorage.setItem('timetableData', JSON.stringify(timetableData));
         }
 
-        // ===== TO ADD POOL MANAGEMENT =====
-        
-        let poolData = [];
-        let draggedElement = null;
-        let dragSource = null;
+        // POOL DATA
+        let poolData = [
+            { subject: "Mathematics P2", topic: "Differentiation Rules" },
+            { subject: "Mathematics P2", topic: "Integration Techniques" },
+            { subject: "Mathematics P2", topic: "Differential Equations" },
+            { subject: "Mathematics P2", topic: "Parametric Equations" },
+            { subject: "Mathematics P2", topic: "Sequences and Series" },
+            { subject: "Physics", topic: "Kinematics" },
+            { subject: "Physics", topic: "Dynamics" },
+            { subject: "Physics", topic: "Circular Motion" },
+            { subject: "Physics", topic: "Electromagnetism" },
+            { subject: "Physics", topic: "Waves and Sound" },
+            { subject: "Physics", topic: "Quantum Physics" },
+            { subject: "Chemistry", topic: "Thermochemistry" },
+            { subject: "Chemistry", topic: "Electrochemistry" },
+            { subject: "Chemistry", topic: "Chemical Kinetics" },
+            { subject: "Chemistry", topic: "Acids and Bases" },
+            { subject: "Chemistry", topic: "Redox Reactions" },
+            { subject: "Biology", topic: "Photosynthesis" },
+            { subject: "Biology", topic: "Respiration" },
+            { subject: "Biology", topic: "DNA Structure" },
+            { subject: "Biology", topic: "Protein Synthesis" },
+            { subject: "Biology", topic: "Inheritance Patterns" },
+            { subject: "Biology", topic: "Natural Selection" },
+            { subject: "Mathematics P1", topic: "Quadratic Functions" },
+            { subject: "Mathematics P1", topic: "Exponential Functions" },
+            { subject: "Mathematics P1", topic: "Logarithms" },
+            { subject: "Mathematics P1", topic: "Sequences" },
+            { subject: "Mathematics P1", topic: "Circle Theorems" },
+            { subject: "Mathematics P1", topic: "Coordinate Geometry" },
+            { subject: "History", topic: "Treaty of Versailles" },
+            { subject: "History", topic: "Rise of Fascism" },
+            { subject: "History", topic: "Pearl Harbor" },
+            { subject: "History", topic: "D-Day" },
+            { subject: "History", topic: "Cuban Missile Crisis" },
+            { subject: "History", topic: "Fall of Berlin Wall" },
+            { subject: "Geography", topic: "Greenhouse Effect" },
+            { subject: "Geography", topic: "Deforestation" },
+            { subject: "Geography", topic: "Urbanization" },
+            { subject: "Geography", topic: "Migration Patterns" },
+            { subject: "Geography", topic: "Resource Management" },
+            { subject: "Geography", topic: "Tectonic Plates" },
+            { subject: "English", topic: "Metaphor and Simile" },
+            { subject: "English", topic: "Sonnet Analysis" },
+            { subject: "English", topic: "Persuasive Writing" },
+            { subject: "English", topic: "Character Development" },
+            { subject: "English", topic: "Theme Analysis" },
+            { subject: "English", topic: "Literary Devices" },
+            { subject: "IT", topic: "Variables and Data Types" },
+            { subject: "IT", topic: "Control Structures" },
+            { subject: "IT", topic: "Functions" },
+            { subject: "IT", topic: "Arrays" },
+            { subject: "IT", topic: "Sorting Algorithms" },
+            { subject: "IT", topic: "Binary Search" },
+            { subject: "Mock Exam", topic: "Full Math P2 Paper" },
+            { subject: "Mock Exam", topic: "Full Physics Paper" },
+            { subject: "Mock Exam", topic: "Full Chemistry Paper" },
+            { subject: "Mock Exam", topic: "Full Biology Paper" }
+        ];
 
-        // Initialize pool with 23 missing sessions
+        // Load pool data from localStorage
+        const savedPool = localStorage.getItem('poolData');
+        if (savedPool) {
+            poolData = JSON.parse(savedPool);
+        } else {
+            localStorage.setItem('poolData', JSON.stringify(poolData));
+        }
+
         function initializePool() {
-            const defaultSessions = [
-                { subject: "Life Sciences P1", topic: "Nervous System" },
-                { subject: "Life Sciences P1", topic: "Nervous System" },
-                { subject: "Life Sciences P1", topic: "Nervous System" },
-                { subject: "Life Sciences P1", topic: "Plant Response" },
-                { subject: "Life Sciences P1", topic: "Homeostasis" },
-                { subject: "Life Sciences P1", topic: "Human Reproduction" },
-                { subject: "Life Sciences P1", topic: "Vertebrate Reproduction" },
-                { subject: "Life Sciences P1", topic: "Mock P1 Review" },
-                { subject: "Life Sciences P1", topic: "Mock P1 Review" },
-                { subject: "Life Sciences P1", topic: "Mock P1 Review" },
-                { subject: "Life Sciences P2", topic: "Mock P2 + Review" },
-                { subject: "Life Sciences P2", topic: "Mock P2 + Review" },
-                { subject: "Mathematics P1", topic: "Calculus" },
-                { subject: "Mathematics P1", topic: "Algebra" },
-                { subject: "Mathematics P1", topic: "Functions & Graphs" },
-                { subject: "Mathematics P1", topic: "Functions & Graphs" },
-                { subject: "Mathematics P1", topic: "Functions & Graphs" },
-                { subject: "Mathematics P1", topic: "Finance & Probability" },
-                { subject: "Mathematics P1", topic: "Finance & Probability" },
-                { subject: "Mathematics P1", topic: "Finance & Probability" },
-                { subject: "Mathematics P1", topic: "Patterns & Sequences" },
-                { subject: "Mathematics P1", topic: "Mock P1 + Review" },
-                { subject: "Mathematics P2", topic: "Euclidean Geometry" },
-                { subject: "Mathematics P2", topic: "Euclidean Geometry" },
-                { subject: "Mathematics P2", topic: "Statistics" },
-                { subject: "Mathematics P2", topic: "Statistics" },
-                { subject: "Mathematics P2", topic: "Analytical Geometry" },
-                { subject: "Mathematics P2", topic: "Analytical Geometry" },
-                { subject: "Mathematics P2", topic: "Analytical Geometry" },
-                { subject: "Mathematics P2", topic: "Trigonometry" },
-                { subject: "Mathematics P2", topic: "Trigonometry" },
-                { subject: "English P1", topic: "Mock P1" },
-                { subject: "English P1", topic: "Mock P1" },
-                { subject: "English P2", topic: "Poetry + Literature" },
-                { subject: "English P2", topic: "Poetry + Literature" },
-                { subject: "Geography P2", topic: "Settlement Geography" },
-                { subject: "Geography P2", topic: "Economic Geography" },
-                { subject: "Geography P2", topic: "Economic Geography" },
-                { subject: "Geography P2", topic: "Economic Geography" },
-                { subject: "Geography P2", topic: "Mapwork" },
-                { subject: "Geography P2", topic: "Mock P2 + Review" },
-                { subject: "Economics P1", topic: "Macroeconomics" },
-                { subject: "Economics P1", topic: "Macroeconomics" },
-                { subject: "Economics P1", topic: "Macroeconomics" },
-                { subject: "Economics P1", topic: "Macroeconomics" },
-                { subject: "Economics P1", topic: "Economic Pursuits" },
-                { subject: "Economics P1", topic: "Economic Pursuits" },
-                { subject: "Economics P2", topic: "Contemporary Issues" },
-                { subject: "Economics P2", topic: "Mock + Review" },
-                { subject: "Consumer Studies", topic: "Entrepreneurship" },
-                { subject: "Consumer Studies", topic: "The Consumer + Housing" },
-                { subject: "Consumer Studies", topic: "The Consumer + Housing" },
-                { subject: "Consumer Studies", topic: "The Consumer + Housing" },
-                { subject: "Consumer Studies", topic: "The Consumer + Housing" },
-                { subject: "Consumer Studies", topic: "The Consumer + Housing" },
-                { subject: "Consumer Studies", topic: "Mock + Final Review" },
-            ];;
-            
-            if (!localStorage.getItem('poolInitialized')) {
-                poolData = defaultSessions;
-                localStorage.setItem('poolData', JSON.stringify(poolData));
-                localStorage.setItem('poolInitialized', 'true');
-            } else {
-                const saved = localStorage.getItem('poolData');
-                poolData = saved ? JSON.parse(saved) : [];
-            }
-            
             renderPool();
+            loadTimetable();
+            updateStatistics();
+            updateProgress();
         }
 
         function renderPool() {
-            const container = document.getElementById('poolList');
-            const countEl = document.getElementById('poolCount');
+            const poolContainer = document.getElementById('poolItems');
+            const poolCount = document.getElementById('poolCount');
             
-            if (!container || !countEl) return;
+            poolCount.textContent = `${poolData.length} session${poolData.length !== 1 ? 's' : ''}`;
             
-            countEl.textContent = poolData.length + ' session' + (poolData.length !== 1 ? 's' : '');
+            poolContainer.innerHTML = '';
             
-            if (poolData.length === 0) {
-                container.innerHTML = '<div class="empty-pool">No sessions to add yet</div>';
-                return;
-            }
-            
-            let html = '';
             poolData.forEach((item, index) => {
-                html += '<div class="pool-item" draggable="true" data-index="' + index + '" data-subject="' + item.subject + '" data-topic="' + item.topic + '">';
-                html += '<span class="pool-item-handle">⋮⋮</span>';
-                html += '<div class="pool-item-content">';
-                html += '<div class="pool-item-topic">' + item.topic + '</div>';
-                html += '<div class="pool-item-subject">' + item.subject + '</div>';
-                html += '</div>';
-                html += '<div class="pool-item-actions">';
-                html += '<button class="btn-pool btn-pool-edit" onclick="editPoolItem(' + index + ')">✏️</button>';
-                html += '<button class="btn-pool btn-pool-delete" onclick="deletePoolItem(' + index + ')">🗑️</button>';
-                html += '</div></div>';
-            });
-            
-            container.innerHTML = html;
-            
-            // Attach drag listeners
-            document.querySelectorAll('.pool-item').forEach(item => {
-                item.addEventListener('dragstart', handlePoolDragStart);
-                item.addEventListener('dragend', handleDragEnd);
+                const poolItem = document.createElement('div');
+                poolItem.className = 'pool-item';
+                poolItem.draggable = true;
+                poolItem.dataset.index = index;
+                poolItem.dataset.subject = item.subject;
+                poolItem.dataset.topic = item.topic;
+                
+                poolItem.innerHTML = `
+                    <span class="drag-handle">⋮⋮</span>
+                    <div class="pool-item-content">
+                        <div class="session-subject">${item.subject}</div>
+                        <div class="session-topic">${item.topic}</div>
+                    </div>
+                    <div class="pool-actions">
+                        <button class="action-btn action-btn-edit" onclick="editPoolItem(${index})">✏️</button>
+                        <button class="action-btn action-btn-delete" onclick="deletePoolItem(${index})">🗑️</button>
+                    </div>
+                `;
+                
+                poolItem.addEventListener('dragstart', handlePoolDragStart);
+                poolItem.addEventListener('dragend', handleDragEnd);
+                
+                poolContainer.appendChild(poolItem);
             });
         }
 
+        // TIMETABLE RENDERING
+        function loadTimetable() {
+            const container = document.getElementById('timetableContent');
+            container.innerHTML = '';
+
+            for (const [weekName, days] of Object.entries(timetableData)) {
+                const weekSection = document.createElement('div');
+                weekSection.className = 'week-section';
+                
+                const weekHeader = document.createElement('div');
+                weekHeader.className = 'week-header';
+                weekHeader.textContent = weekName;
+                weekSection.appendChild(weekHeader);
+
+                days.forEach(day => {
+                    const dayCard = document.createElement('div');
+                    dayCard.className = 'day-card';
+                    
+                    const dayHeader = document.createElement('div');
+                    dayHeader.className = 'day-header';
+                    
+                    const dayTitle = document.createElement('div');
+                    dayTitle.className = 'day-title';
+                    dayTitle.textContent = day.date;
+                    dayHeader.appendChild(dayTitle);
+                    
+                    if (day.exam) {
+                        const examBadge = document.createElement('span');
+                        examBadge.className = 'exam-badge';
+                        examBadge.textContent = `🎓 EXAM: ${day.exam}`;
+                        dayHeader.appendChild(examBadge);
+                    } else if (day.rest) {
+                        const restBadge = document.createElement('span');
+                        restBadge.className = 'rest-badge';
+                        restBadge.textContent = '😴 Rest Day';
+                        dayHeader.appendChild(restBadge);
+                    }
+                    
+                    dayCard.appendChild(dayHeader);
+                    
+                    // CRITICAL FIX: Create session list for ALL days (including exam/rest days)
+                    const sessionList = document.createElement('div');
+                    sessionList.className = 'session-list';
+                    sessionList.dataset.dayDate = day.date; // Store date on the list itself
+                    sessionList.addEventListener('dragover', handleDragOver);
+                    sessionList.addEventListener('dragenter', handleDragEnter);
+                    sessionList.addEventListener('dragleave', handleDragLeave);
+                    sessionList.addEventListener('drop', handleDrop);
+                    
+                    if (day.sessions && day.sessions.length > 0) {
+                        day.sessions.forEach(session => {
+                            const sessionItem = document.createElement('div');
+                            sessionItem.className = 'session-item';
+                            sessionItem.draggable = true;
+                            sessionItem.dataset.sessionId = session.id;
+                            
+                            const subjectClass = session.subject.split(' ')[0];
+                            
+                            sessionItem.innerHTML = `
+                                <span class="drag-handle">⋮⋮</span>
+                                <input type="checkbox" ${session.completed ? 'checked' : ''} 
+                                       onchange="toggleComplete('${session.id}')">
+                                <div class="session-content">
+                                    <div class="session-subject">${session.subject}</div>
+                                    <div class="session-topic">${session.topic}</div>
+                                </div>
+                                <span class="subject-badge subject-${subjectClass}">${subjectClass}</span>
+                                <span class="menu-trigger" onclick="toggleSessionMenu(this.parentElement)">⋮</span>
+                                <div class="session-menu">
+                                    <div class="session-menu-item edit" onclick="editSession('${session.id}')">
+                                        ✏️ Edit
+                                    </div>
+                                    <div class="session-menu-item delete" onclick="deleteSession('${session.id}')">
+                                        🗑️ Delete
+                                    </div>
+                                </div>
+                            `;
+                            
+                            sessionItem.addEventListener('dragstart', handleSessionDragStart);
+                            sessionItem.addEventListener('dragend', handleDragEnd);
+                            
+                            sessionList.appendChild(sessionItem);
+                        });
+                    }
+                    
+                    // Always append the session list, even if empty
+                    dayCard.appendChild(sessionList);
+                    weekSection.appendChild(dayCard);
+                });
+
+                container.appendChild(weekSection);
+            }
+            
+            updateProgress();
+        }
+
+        function toggleComplete(sessionId) {
+            for (const week in timetableData) {
+                for (const day of timetableData[week]) {
+                    if (day.sessions) {
+                        const session = day.sessions.find(s => s.id === sessionId);
+                        if (session) {
+                            session.completed = !session.completed;
+                            localStorage.setItem('timetableData', JSON.stringify(timetableData));
+                            updateProgress();
+                            updateStatistics();
+                            return;
+                        }
+                    }
+                }
+            }
+        }
+
+        function updateProgress() {
+            let total = 0;
+            let completed = 0;
+            
+            for (const week in timetableData) {
+                for (const day of timetableData[week]) {
+                    if (day.sessions) {
+                        total += day.sessions.length;
+                        completed += day.sessions.filter(s => s.completed).length;
+                    }
+                }
+            }
+            
+            const percentage = total > 0 ? Math.round((completed / total) * 100) : 0;
+            const progressBar = document.getElementById('progressBar');
+            progressBar.style.width = percentage + '%';
+            progressBar.textContent = percentage + '%';
+        }
+
+        function updateTimetableData() {
+            for (const week in timetableData) {
+                for (const day of timetableData[week]) {
+                    if (day.sessions) {
+                        const dayTitle = day.date;
+                        const dayCard = Array.from(document.querySelectorAll('.day-card')).find(card => {
+                            return card.querySelector('.day-title').textContent === dayTitle;
+                        });
+                        
+                        if (dayCard) {
+                            const sessionList = dayCard.querySelector('.session-list');
+                            if (sessionList) {
+                                const sessionItems = Array.from(sessionList.querySelectorAll('.session-item'));
+                                day.sessions = sessionItems.map(item => {
+                                    const sessionId = item.dataset.sessionId;
+                                    return day.sessions.find(s => s.id === sessionId);
+                                }).filter(Boolean);
+                            }
+                        }
+                    }
+                }
+            }
+            
+            localStorage.setItem('timetableData', JSON.stringify(timetableData));
+        }
+
+        // POOL MODAL FUNCTIONS
         function openAddModal() {
+            document.getElementById('addSessionModal').style.display = 'block';
             document.getElementById('newSubject').value = '';
             document.getElementById('newTopic').value = '';
-            document.getElementById('addSessionModal').style.display = 'block';
         }
 
         function closeAddModal() {
@@ -1705,14 +1394,17 @@
             }
         }
 
-        // ===== DRAG AND DROP =====
-        
+        // DRAG AND DROP - IMPROVED
+        let draggedElement = null;
+        let dragSource = null;
+
         function handlePoolDragStart(e) {
             draggedElement = this;
             dragSource = 'pool';
             this.classList.add('dragging');
             e.dataTransfer.effectAllowed = 'move';
             e.dataTransfer.setData('text/plain', '');
+            console.log('Started dragging from pool:', this.dataset.subject, this.dataset.topic);
         }
 
         function handleDragEnd(e) {
@@ -1722,6 +1414,7 @@
             document.querySelectorAll('.drag-over').forEach(el => {
                 el.classList.remove('drag-over');
             });
+            console.log('Drag ended');
             draggedElement = null;
             dragSource = null;
         }
@@ -1732,6 +1425,7 @@
             this.classList.add('dragging');
             e.dataTransfer.effectAllowed = 'move';
             e.dataTransfer.setData('text/plain', '');
+            console.log('Started dragging session from timetable:', this.dataset.sessionId);
         }
 
         function handleDragOver(e) {
@@ -1752,6 +1446,7 @@
             const dropTarget = e.target.closest('.session-list');
             if (dropTarget) {
                 dropTarget.classList.add('drag-over');
+                console.log('Drag entered:', dropTarget.dataset.dayDate);
             }
         }
 
@@ -1769,28 +1464,29 @@
             e.preventDefault();
             
             const dropTarget = e.target.closest('.session-list');
-            if (!dropTarget) return false;
+            if (!dropTarget) {
+                console.error('No drop target found');
+                return false;
+            }
             
             dropTarget.classList.remove('drag-over');
             
-            if (!draggedElement) return false;
+            if (!draggedElement) {
+                console.error('No dragged element');
+                return false;
+            }
+            
+            // Get the date from the session-list itself
+            const dayDate = dropTarget.dataset.dayDate;
+            console.log('Dropping on date:', dayDate);
             
             if (dragSource === 'pool') {
-                // Adding from pool to timetable
                 const index = parseInt(draggedElement.dataset.index);
                 const subject = draggedElement.dataset.subject;
                 const topic = draggedElement.dataset.topic;
                 
-                // Get the day date from the parent day card
-                const dayCard = dropTarget.closest('.day-card');
-                if (!dayCard) return false;
+                console.log('Adding session from pool:', subject, topic, 'to', dayDate);
                 
-                const dayTitle = dayCard.querySelector('.day-title');
-                if (!dayTitle) return false;
-                
-                const dayDate = dayTitle.textContent.trim();
-                
-                // Add to timetable
                 addSessionToDay(dayDate, subject, topic);
                 
                 // Remove from pool
@@ -1799,8 +1495,8 @@
                 renderPool();
                 
             } else if (dragSource === 'timetable') {
-                // Moving within timetable (original behavior)
                 if (draggedElement.parentNode !== dropTarget) {
+                    console.log('Moving session between days');
                     dropTarget.appendChild(draggedElement);
                     updateTimetableData();
                 }
@@ -1810,43 +1506,162 @@
         }
 
         function addSessionToDay(dayDate, subject, topic) {
-            // Find the day in timetableData
+            console.log('🔍 Attempting to add session to:', dayDate);
+            console.log('📚 Session details:', subject, '-', topic);
+            
+            let found = false;
+            
             for (const week in timetableData) {
                 for (const day of timetableData[week]) {
-                    if (day.date === dayDate) {
+                    // Trim both dates for comparison
+                    const normalizedDayDate = day.date.trim();
+                    const normalizedDropDate = dayDate.trim();
+                    
+                    console.log('  Comparing:', normalizedDayDate, '===', normalizedDropDate);
+                    
+                    if (normalizedDayDate === normalizedDropDate) {
+                        found = true;
+                        console.log('✅ Found matching day!');
+                        
+                        // Initialize sessions array if it doesn't exist
                         if (!day.sessions) {
                             day.sessions = [];
+                            console.log('  Created new sessions array');
                         }
                         
-                        // Generate unique ID
                         const timestamp = Date.now();
                         const sessionId = dayDate.toLowerCase().replace(/\s/g, '') + '-' + timestamp;
                         
                         day.sessions.push({
                             id: sessionId,
                             subject: subject,
-                            topic: topic
+                            topic: topic,
+                            completed: false
                         });
                         
-                        // Save and reload
+                        console.log('  Session added! Total sessions now:', day.sessions.length);
+                        
                         localStorage.setItem('timetableData', JSON.stringify(timetableData));
                         loadTimetable();
                         return;
                     }
                 }
             }
+            
+            if (!found) {
+                console.error('❌ Could not find date in timetable:', dayDate);
+                console.log('Available dates:');
+                for (const week in timetableData) {
+                    for (const day of timetableData[week]) {
+                        console.log('  -', day.date);
+                    }
+                }
+                alert('Error: Could not add session to "' + dayDate + '". This date may not exist in the timetable. Check the console for details.');
+            }
+        }
+
+        // SESSION MENU FUNCTIONS
+        function toggleSessionMenu(sessionItem) {
+            document.querySelectorAll('.session-menu.show').forEach(menu => {
+                if (menu !== sessionItem.querySelector('.session-menu')) {
+                    menu.classList.remove('show');
+                }
+            });
+            
+            const menu = sessionItem.querySelector('.session-menu');
+            if (menu) {
+                menu.classList.toggle('show');
+            }
+        }
+
+        document.addEventListener('click', function(e) {
+            if (!e.target.closest('.session-item') && !e.target.closest('.session-menu')) {
+                document.querySelectorAll('.session-menu.show').forEach(menu => {
+                    menu.classList.remove('show');
+                });
+            }
+            
+            const poolModal = document.getElementById('addSessionModal');
+            if (e.target === poolModal) {
+                closeAddModal();
+            }
+        });
+
+        function editSession(sessionId) {
+            document.querySelectorAll('.session-menu.show').forEach(menu => {
+                menu.classList.remove('show');
+            });
+            
+            let foundSession = null;
+            
+            for (const week in timetableData) {
+                for (const day of timetableData[week]) {
+                    if (day.sessions) {
+                        const session = day.sessions.find(s => s.id === sessionId);
+                        if (session) {
+                            foundSession = session;
+                            break;
+                        }
+                    }
+                }
+                if (foundSession) break;
+            }
+            
+            if (!foundSession) {
+                alert('Session not found');
+                return;
+            }
+            
+            const newSubject = prompt('Edit Subject:', foundSession.subject);
+            if (newSubject === null) return;
+            
+            const newTopic = prompt('Edit Topic:', foundSession.topic);
+            if (newTopic === null) return;
+            
+            if (newSubject.trim() && newTopic.trim()) {
+                foundSession.subject = newSubject.trim();
+                foundSession.topic = newTopic.trim();
+                localStorage.setItem('timetableData', JSON.stringify(timetableData));
+                loadTimetable();
+            }
+        }
+
+        function deleteSession(sessionId) {
+            document.querySelectorAll('.session-menu.show').forEach(menu => {
+                menu.classList.remove('show');
+            });
+            
+            if (!confirm('Delete this session from your timetable?')) {
+                return;
+            }
+            
+            for (const week in timetableData) {
+                for (const day of timetableData[week]) {
+                    if (day.sessions) {
+                        const index = day.sessions.findIndex(s => s.id === sessionId);
+                        if (index !== -1) {
+                            day.sessions.splice(index, 1);
+                            localStorage.setItem('timetableData', JSON.stringify(timetableData));
+                            loadTimetable();
+                            return;
+                        }
+                    }
+                }
+            }
+            
+            alert('Session not found');
         }
 
         // Initialize on load
         window.addEventListener('DOMContentLoaded', function() {
             initializePool();
-        });
-
-        // Close modal on outside click
-        window.addEventListener('click', function(event) {
-            const modal = document.getElementById('addSessionModal');
-            if (event.target === modal) {
-                closeAddModal();
+            console.log('🚀 Tracker initialized!');
+            console.log('Available dates in timetable:');
+            for (const week in timetableData) {
+                console.log('Week:', week);
+                for (const day of timetableData[week]) {
+                    console.log('  -', day.date);
+                }
             }
         });
 
